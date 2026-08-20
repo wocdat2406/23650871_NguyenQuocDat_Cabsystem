@@ -1,3 +1,18 @@
-#Xây dựng một hệ thống cơ bản MVB#
-đứng ở vai trò BA
-bước 1: đọc và phân tích yêu cầu sơ khởi của khách hàng ở giai đoạn 1 (hiểu được Business Context - ngữ cảnh của nghiệp vụ và vấn đề của nghiệp vụ là cái gì)
+### Xây dựng hệ thống cơ bản
+
+**Đóng vai trò:** BA (Business Analyst)
+
+#### Bước 1: Phân tích yêu cầu sơ  của khách hàng
+
+Ở giai đoạn sơ khởi (giai đoạn 1), BA cần tập trung vào việc **phân tích và tìm hiểu yêu cầu của khách hàng**.
+
+Mục tiêu chính là hiểu được **Business Context** – tức là **ngữ cảnh của nghiệp vụ**, bao gồm:
+
+- **Khách hàng là ai?**
+- **Doanh nghiệp đang giải quyết vấn đề gì?**
+- **Mục tiêu kinh doanh (Business Goal) là gì?**
+- **Quy trình nghiệp vụ hiện tại (As-Is) đang diễn ra như thế nào?**
+- **Những vấn đề hoặc khó khăn đang tồn tại là gì?**
+- **Hệ thống cần giải quyết vấn đề nào?**
+- **Kết quả mong muốn (To-Be) của khách hàng là gì?**
+  
