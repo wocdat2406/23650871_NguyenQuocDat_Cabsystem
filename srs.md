@@ -19,7 +19,6 @@ Mục tiêu chính là hiểu được **Business Context** – tức là **ng�
 - **Hệ thống cần giải quyết vấn đề nào?**
 - **Kết quả mong muốn (To-Be) của khách hàng là gì?**
 
-  ....
   # BƯỚC 1: PHÂN TÍCH YÊU CẦU SƠ KHỞI CỦA KHÁCH HÀNG
 
 ## 1. Mục tiêu của bước phân tích
