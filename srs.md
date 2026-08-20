@@ -66,25 +66,6 @@ Về bản chất, Công ty ABC đang cung cấp dịch vụ kết nối giữa:
 
 Quy trình kinh doanh cốt lõi có thể được mô tả như sau:
 
-```text
-Khách hàng có nhu cầu di chuyển
-        ↓
-Tạo yêu cầu đặt xe
-        ↓
-Tìm tài xế phù hợp
-        ↓
-Tài xế nhận chuyến
-        ↓
-Tài xế đến đón khách
-        ↓
-Thực hiện chuyến đi
-        ↓
-Hoàn thành chuyến
-        ↓
-Tính cước và thanh toán
-        ↓
-Khách hàng đánh giá dịch vụ
-  
 ### Bước 2: Xác định các Stakeholders
 
 #### 2.1. Danh sách Stakeholders
