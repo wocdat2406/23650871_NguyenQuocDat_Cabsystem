@@ -446,3 +446,152 @@ Từ danh sách Business Requirements (BR01–BR37) đã xác nhận với khác
 - Toàn bộ 9 Business Process (BP01–BP09) trên bao phủ đầy đủ các nhóm BR đã liệt kê ở Bước 5, tương ứng với các module đã xác định ở Bước 4.
 - Các bước có đánh dấu **"chưa chốt" / "Open Question"** (ví dụ: chính sách hủy chuyến, xử lý khách không có mặt, xử lý mất kết nối mạng, chính sách retry thanh toán) cần được BA làm rõ với khách hàng **trước khi chuyển sang thiết kế Use Case chi tiết và đặc tả chức năng (Bước 7)**.
 - Các BP được thiết kế tuân theo nguyên tắc **tách rời và không phụ thuộc chặt (loose coupling)** giữa các phân hệ (ví dụ: lỗi ở BP05 - Thông báo không được làm gián đoạn BP01 - Đặt chuyến), đúng theo yêu cầu BG06/BR36 về khả năng vận hành ổn định.
+
+#### Bước 7: Phân rã Business Process thành Functional Requirements (FR)
+
+Từ 9 Business Process (BP01–BP09) đã xây dựng ở Bước 6, tiến hành phân rã từng bước xử lý trong quy trình thành các **Functional Requirement (FR)** — là các yêu cầu chức năng chi tiết ở mức có thể chuyển giao cho đội phát triển thiết kế màn hình, luồng xử lý và logic hệ thống.
+
+Nguyên tắc phân rã: mỗi FR mô tả **một hành động/logic xử lý cụ thể**, có thể có điều kiện áp dụng (nếu có tham số/tuỳ chọn thì mới thực hiện, nếu không có thì bỏ qua) — như ví dụ FR04 (rating tài xế) chỉ áp dụng khi khách hàng có yêu cầu.
+
+---
+
+##### FR nhóm BP01 – Đặt chuyến (Booking Trip)
+
+| Mã | Tên FR | Diễn giải |
+|---|---|---|
+| FR01 | Nhập điểm đón | Khách hàng nhập hoặc chọn từ danh sách địa điểm đã lưu làm điểm đón |
+| FR02 | Nhập điểm đến | Khách hàng nhập hoặc chọn từ danh sách địa điểm đã lưu làm điểm đến |
+| FR03 | Chọn loại xe/dịch vụ | Khách hàng chọn loại xe mong muốn (ví dụ: 4 chỗ, 7 chỗ, xe máy...) |
+| FR04 | Ước tính giá tạm tính | Hệ thống hiển thị mức giá ước tính dựa trên điểm đón, điểm đến và loại xe trước khi khách hàng xác nhận đặt |
+| FR05 | Xác nhận gửi yêu cầu đặt xe | Khách hàng xác nhận và hệ thống ghi nhận yêu cầu đặt xe vào hệ thống |
+| FR06 | Kiểm tra hợp lệ của yêu cầu | Hệ thống kiểm tra điểm đón/điểm đến hợp lệ (không rỗng, nằm trong khu vực phục vụ) trước khi xử lý tiếp |
+| FR07 | Gửi xác nhận tiếp nhận yêu cầu | Hệ thống phản hồi cho khách hàng biết yêu cầu đã được tiếp nhận và đang tìm tài xế |
+| FR08 | Cho phép hủy yêu cầu trước khi có tài xế | Khách hàng có thể hủy yêu cầu trong lúc hệ thống đang tìm tài xế |
+
+---
+
+##### FR nhóm BP02 – Điều phối & Tìm tài xế (Dispatch/Matching)
+
+| Mã | Tên FR | Diễn giải |
+|---|---|---|
+| FR09 | Xác định vị trí khách hàng | Hệ thống lấy tọa độ vị trí hiện tại (điểm đón) của khách hàng làm gốc tìm kiếm |
+| FR10 | Xác định bán kính tìm kiếm | Hệ thống xác định bán kính xung quanh điểm đón để giới hạn phạm vi tìm tài xế |
+| FR11 | Lọc tài xế đang online trong bán kính | Hệ thống lọc ra danh sách tài xế đang ở trạng thái sẵn sàng (online) nằm trong bán kính đã xác định |
+| FR12 | Lọc theo loại xe khách hàng yêu cầu | Hệ thống lọc tiếp danh sách tài xế theo đúng loại xe/dịch vụ mà khách hàng đã chọn ở FR03 |
+| FR13 | Lọc theo yêu cầu rating cao (nếu có) | Nếu khách hàng có chọn tuỳ chọn "ưu tiên tài xế đánh giá cao", hệ thống lọc thêm theo điểm đánh giá trung bình của tài xế; nếu khách hàng không chọn thì bỏ qua bước lọc này |
+| FR14 | Sắp xếp danh sách tài xế theo độ ưu tiên | Hệ thống sắp xếp danh sách tài xế đã lọc theo tiêu chí ưu tiên (gần nhất, rating nếu có yêu cầu...) |
+| FR15 | Gửi đề xuất chuyến đến tài xế đầu danh sách | Hệ thống gửi thông báo đề xuất chuyến cho tài xế có thứ tự ưu tiên cao nhất |
+| FR16 | Đặt thời gian chờ phản hồi (timeout) | Hệ thống đếm thời gian giới hạn để tài xế phản hồi (chấp nhận/từ chối) |
+| FR17 | Xử lý khi tài xế chấp nhận | Hệ thống ghi nhận tài xế đã nhận chuyến, cập nhật trạng thái chuyến, loại tài xế này khỏi hàng đợi tìm kiếm |
+| FR18 | Xử lý khi tài xế từ chối | Hệ thống loại tài xế khỏi danh sách đề xuất cho chuyến hiện tại, quay lại FR15 với tài xế kế tiếp trong danh sách |
+| FR19 | Xử lý khi tài xế không phản hồi (hết timeout) | Hệ thống tự động coi như từ chối, loại tài xế khỏi danh sách đề xuất, quay lại FR15 với tài xế kế tiếp |
+| FR20 | Kiểm tra danh sách tài xế còn lại | Hệ thống kiểm tra nếu danh sách tài xế phù hợp đã hết mà chưa có ai nhận chuyến |
+| FR21 | Thông báo không tìm được tài xế | Nếu FR20 xác định không còn tài xế phù hợp, hệ thống gửi thông báo cho khách hàng và kết thúc quy trình tìm tài xế |
+
+---
+
+##### FR nhóm BP03 – Thực hiện chuyến đi (Trip Execution)
+
+| Mã | Tên FR | Diễn giải |
+|---|---|---|
+| FR22 | Hiển thị thông tin tài xế cho khách hàng | Sau khi có tài xế nhận, hệ thống hiển thị tên, ảnh, biển số xe, số điện thoại tài xế cho khách hàng |
+| FR23 | Cập nhật vị trí tài xế theo thời gian thực | Hệ thống liên tục nhận và cập nhật vị trí tài xế trong lúc di chuyển đến điểm đón và trong chuyến |
+| FR24 | Ước tính thời gian tài xế đến (ETA) | Hệ thống tính và hiển thị thời gian dự kiến tài xế đến điểm đón dựa trên vị trí hiện tại |
+| FR25 | Cập nhật trạng thái "đã đến điểm đón" | Tài xế xác nhận đã đến điểm đón; hệ thống cập nhật trạng thái chuyến tương ứng |
+| FR26 | Cập nhật trạng thái "đã đón khách" | Tài xế xác nhận đã đón khách; hệ thống cập nhật trạng thái chuyến |
+| FR27 | Cập nhật trạng thái "đang di chuyển" | Tài xế cập nhật trạng thái đang trong hành trình đến điểm đến |
+| FR28 | Khách hàng theo dõi hành trình trên bản đồ | Khách hàng xem vị trí tài xế theo thời gian thực trên giao diện app trong suốt chuyến đi |
+| FR29 | Cập nhật trạng thái "hoàn thành chuyến" | Tài xế xác nhận đã đến điểm đến; hệ thống cập nhật trạng thái chuyến là hoàn thành và chuyển sang quy trình tính cước |
+| FR30 | Cho phép hủy chuyến sau khi có tài xế | Khách hàng có thể hủy chuyến sau khi đã có tài xế nhận nhưng trước khi tài xế đến điểm đón |
+| FR31 | Giải phóng tài xế khi chuyến bị hủy | Khi chuyến bị hủy, hệ thống chuyển trạng thái tài xế liên quan về lại "sẵn sàng nhận chuyến" |
+
+---
+
+##### FR nhóm BP04 – Tính cước & Thanh toán (Fare & Payment)
+
+| Mã | Tên FR | Diễn giải |
+|---|---|---|
+| FR32 | Tính quãng đường/thời gian thực tế của chuyến | Hệ thống tính toán quãng đường và thời gian di chuyển thực tế từ dữ liệu vị trí đã ghi nhận |
+| FR33 | Tính cước theo loại dịch vụ | Hệ thống áp dụng công thức tính cước tương ứng với loại xe/dịch vụ đã chọn |
+| FR34 | Hiển thị chi tiết hóa đơn cho khách hàng | Hệ thống hiển thị số tiền cần thanh toán kèm chi tiết (quãng đường, thời gian, loại xe...) |
+| FR35 | Chọn hình thức thanh toán | Khách hàng chọn thanh toán bằng tiền mặt hoặc thanh toán điện tử |
+| FR36 | Xác nhận thanh toán tiền mặt | Tài xế xác nhận đã nhận đủ tiền mặt từ khách hàng trên hệ thống |
+| FR37 | Khởi tạo giao dịch thanh toán điện tử | Hệ thống gửi yêu cầu thanh toán đến nhà cung cấp thanh toán bên ngoài, không truyền thông tin nhạy cảm của thẻ về hệ thống CAB |
+| FR38 | Nhận và xử lý kết quả thanh toán điện tử | Hệ thống nhận phản hồi từ nhà cung cấp thanh toán và cập nhật trạng thái giao dịch |
+| FR39 | Thông báo giao dịch thất bại | Nếu thanh toán điện tử thất bại, hệ thống thông báo cho khách hàng và đề nghị chọn lại phương thức hoặc thử lại |
+| FR40 | Cập nhật trạng thái thanh toán hoàn tất | Hệ thống đánh dấu chuyến đi đã thanh toán xong (dù bằng tiền mặt hay điện tử) |
+
+---
+
+##### FR nhóm BP05 – Thông báo (Notification)
+
+| Mã | Tên FR | Diễn giải |
+|---|---|---|
+| FR41 | Lắng nghe sự kiện hệ thống | Hệ thống thông báo lắng nghe các sự kiện phát sinh từ các phân hệ khác (đặt xe, điều phối, chuyến đi, thanh toán) |
+| FR42 | Xác định đối tượng nhận thông báo | Hệ thống xác định thông báo cần gửi cho khách hàng, tài xế hay cả hai theo từng loại sự kiện |
+| FR43 | Soạn nội dung thông báo theo mẫu | Hệ thống tạo nội dung thông báo dựa trên loại sự kiện (mẫu tiếp nhận yêu cầu, mẫu tài xế nhận chuyến...) |
+| FR44 | Gửi thông báo qua kênh tương ứng | Hệ thống gửi thông báo qua kênh đã cấu hình (ví dụ push notification trong app) |
+| FR45 | Ghi nhận trạng thái gửi thông báo | Hệ thống ghi lại thông báo đã gửi thành công hay thất bại để phục vụ theo dõi/gửi lại |
+
+---
+
+##### FR nhóm BP06 – Đánh giá tài xế (Rating)
+
+| Mã | Tên FR | Diễn giải |
+|---|---|---|
+| FR46 | Hiển thị màn hình đánh giá sau chuyến | Sau khi thanh toán hoàn tất, hệ thống hiển thị giao diện đánh giá cho khách hàng |
+| FR47 | Chọn mức đánh giá (số sao) | Khách hàng chọn mức đánh giá cho tài xế |
+| FR48 | Nhập nhận xét (tuỳ chọn) | Khách hàng có thể nhập thêm nhận xét bằng văn bản; nếu không nhập thì bỏ qua |
+| FR49 | Lưu đánh giá vào hệ thống | Hệ thống lưu đánh giá và liên kết với chuyến đi, tài xế tương ứng |
+| FR50 | Cập nhật điểm đánh giá trung bình của tài xế | Hệ thống tính lại điểm đánh giá trung bình của tài xế sau khi có đánh giá mới |
+
+---
+
+##### FR nhóm BP07 – Đăng ký & Xác thực tài khoản (Registration & Authentication)
+
+| Mã | Tên FR | Diễn giải |
+|---|---|---|
+| FR51 | Nhập thông tin đăng ký | Người dùng nhập thông tin cá nhân bắt buộc để tạo tài khoản (họ tên, số điện thoại/email, mật khẩu...) |
+| FR52 | Kiểm tra tính hợp lệ và trùng lặp | Hệ thống kiểm tra định dạng thông tin và kiểm tra tài khoản đã tồn tại hay chưa |
+| FR53 | Xác thực thông tin đăng ký (OTP/email) | Hệ thống gửi mã xác thực để xác nhận số điện thoại/email của người dùng |
+| FR54 | Tạo tài khoản mới | Hệ thống khởi tạo tài khoản sau khi xác thực thành công |
+| FR55 | Tạo tài khoản tài xế bởi nhân viên vận hành | Nhân viên vận hành có thể tạo tài khoản thay cho tài xế (không qua bước tự đăng ký) |
+| FR56 | Đăng nhập bằng tài khoản | Người dùng nhập thông tin đăng nhập để truy cập hệ thống |
+| FR57 | Xác thực phiên đăng nhập | Hệ thống kiểm tra thông tin đăng nhập và cấp quyền truy cập tương ứng với vai trò người dùng |
+| FR58 | Phân quyền theo vai trò | Hệ thống giới hạn chức năng hiển thị/thao tác theo vai trò: khách hàng, tài xế, nhân viên vận hành, quản trị cấp cao |
+
+---
+
+##### FR nhóm BP08 – Quản trị & Xử lý sự cố chuyến đi (Admin Operations)
+
+| Mã | Tên FR | Diễn giải |
+|---|---|---|
+| FR59 | Xem danh sách chuyến đang diễn ra | Nhân viên vận hành xem danh sách các chuyến đang ở trạng thái hoạt động, kèm trạng thái hiện tại |
+| FR60 | Tìm kiếm/tra cứu khách hàng, tài xế, chuyến đi | Nhân viên vận hành tìm kiếm thông tin theo tên, số điện thoại, mã chuyến... |
+| FR61 | Xem chi tiết một chuyến đi cụ thể | Nhân viên vận hành xem đầy đủ thông tin của một chuyến (khách hàng, tài xế, trạng thái, lộ trình, thanh toán) |
+| FR62 | Can thiệp xử lý sự cố chuyến đi | Nhân viên vận hành thực hiện thao tác xử lý (hủy chuyến, ghép lại tài xế, ghi chú...) |
+| FR63 | Kiểm tra quyền hạn trước thao tác nhạy cảm | Hệ thống kiểm tra vai trò của nhân viên trước khi cho phép thực hiện thao tác nhạy cảm (hoàn tiền, khóa tài khoản...) |
+| FR64 | Ghi log thao tác quản trị | Hệ thống ghi lại người thực hiện, thời gian và nội dung thao tác quản trị vào nhật ký hệ thống |
+
+---
+
+##### FR nhóm BP09 – Báo cáo vận hành (Reporting)
+
+| Mã | Tên FR | Diễn giải |
+|---|---|---|
+| FR65 | Chọn loại báo cáo | Người dùng (nhân viên/quản lý) chọn loại báo cáo muốn xem: số chuyến & doanh thu, tỷ lệ hoàn thành/hủy, hiệu quả tài xế |
+| FR66 | Chọn khoảng thời gian thống kê | Người dùng chọn khoảng thời gian (theo ngày, tuần, tháng...) để lọc dữ liệu báo cáo |
+| FR67 | Tổng hợp dữ liệu từ các phân hệ liên quan | Hệ thống truy xuất và tổng hợp dữ liệu từ các bảng chuyến đi, thanh toán, đánh giá tương ứng |
+| FR68 | Hiển thị báo cáo dạng bảng/biểu đồ | Hệ thống trình bày kết quả tổng hợp dưới dạng bảng số liệu và/hoặc biểu đồ trực quan |
+| FR69 | Xử lý trường hợp không có dữ liệu | Nếu không có dữ liệu trong khoảng thời gian đã chọn, hệ thống hiển thị thông báo phù hợp thay vì báo lỗi |
+
+---
+
+##### Ghi chú
+
+- Danh sách FR01–FR69 ở trên là bản phân rã đầy đủ từ 9 Business Process (BP01–BP09) đã xây dựng ở Bước 6, bám sát nguyên tắc trong ví dụ minh họa: mỗi FR là một hành động/logic xử lý cụ thể, có FR mang tính điều kiện (chỉ thực hiện khi có tham số/tuỳ chọn tương ứng — ví dụ FR13 chỉ áp dụng khi khách hàng có yêu cầu ưu tiên tài xế rating cao).
+- Các FR này sẽ là đầu vào trực tiếp để:
+  - Thiết kế **Use Case chi tiết** (đặc tả actor, tiền điều kiện, hậu điều kiện, luồng sự kiện) ở bước tiếp theo.
+  - Thiết kế **wireframe/màn hình** tương ứng cho từng nhóm chức năng.
+  - Làm cơ sở ước lượng khối lượng công việc (effort estimation) cho đội phát triển trong 7 tuần triển khai.
+- Một số FR liên quan đến các "Open Question" đã nêu ở Bước 6 (ví dụ FR30/FR31 – chính sách hủy chuyến, FR39 – chính sách retry thanh toán) **cần được xác nhận chi tiết với khách hàng trước khi đặc tả Use Case**, để tránh phải chỉnh sửa nhiều lần ở giai đoạn sau.
