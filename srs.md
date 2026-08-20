@@ -907,23 +907,18 @@ erDiagram
     ACCOUNT ||--o| CUSTOMER : "is a"
     ACCOUNT ||--o| DRIVER : "is a"
     ACCOUNT ||--o| OPERATOR_STAFF : "is a"
-
     CUSTOMER ||--o{ SAVED_LOCATION : "has"
     CUSTOMER ||--o{ TRIP : "requests"
-
     DRIVER ||--o{ VEHICLE : "drives"
     DRIVER ||--o{ TRIP : "serves"
     DRIVER ||--o{ DISPATCH_ATTEMPT : "receives"
-
     VEHICLE_TYPE ||--o{ VEHICLE : "categorizes"
     VEHICLE_TYPE ||--o{ TRIP : "selected as"
-
     TRIP ||--o{ DISPATCH_ATTEMPT : "has"
     TRIP ||--o{ TRIP_STATUS_LOG : "has"
     TRIP ||--o| PAYMENT : "has"
     TRIP ||--o| RATING : "has"
     TRIP ||--o{ NOTIFICATION : "triggers"
-
     ACCOUNT ||--o{ NOTIFICATION : "receives"
     ACCOUNT ||--o{ AUDIT_LOG : "performs"
 
@@ -939,12 +934,12 @@ erDiagram
     }
 
     CUSTOMER {
-        string customer_id PK_FK
+        string customer_id PK
         decimal rating_avg
     }
 
     DRIVER {
-        string driver_id PK_FK
+        string driver_id PK
         string status
         decimal current_lat
         decimal current_lng
@@ -953,7 +948,7 @@ erDiagram
     }
 
     OPERATOR_STAFF {
-        string staff_id PK_FK
+        string staff_id PK
         string admin_level
     }
 
