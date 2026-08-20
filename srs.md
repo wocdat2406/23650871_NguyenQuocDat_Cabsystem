@@ -1063,8 +1063,6 @@ erDiagram
         datetime timestamp
     }
 ```
-
-
 ---
 
 ##### 9.4. Ghi chú thiết kế
