@@ -1157,3 +1157,364 @@ Sau khi hoàn tất Data Model & ERD (Bước 9), tiến hành xác định các
 - Tuy nhiên, các nguyên tắc mang tính **nền tảng bắt buộc** (cách ly lỗi giữa các module – NFR08, không lưu thông tin thẻ – NFR13, kiến trúc dễ mở rộng – NFR06/NFR16–19) **vẫn phải tuân thủ ngay từ đầu**, vì đây là yêu cầu tường minh của khách hàng trong tài liệu gốc và khó/tốn kém để bổ sung về sau nếu không thiết kế đúng từ đầu.
 - Các chỉ số cụ thể còn để ở dạng đề xuất (ví dụ số người dùng đồng thời NFR05, mức uptime NFR09) — cần **xác nhận lại với khách hàng** dựa trên quy mô thị trường thực tế và ngân sách hạ tầng, nên được đưa vào danh sách Open Questions.
 - NFR sẽ là đầu vào cho đội kỹ thuật lựa chọn **kiến trúc triển khai cụ thể** (ví dụ modular monolith cho MVP, có lộ trình tách microservices sau khi hệ thống tăng trưởng) ở giai đoạn thiết kế giải pháp kỹ thuật (Solution Design), nằm ngoài phạm vi tài liệu phân tích nghiệp vụ của BA.
+
+# Bước 11: Xác định Actor & Use Case + Vẽ Use Case Diagram
+
+## 11.1. Danh sách Actor
+
+| Actor | Loại | Mô tả |
+|---|---|---|
+| **Customer** | Primary (con người) | Khách hàng sử dụng app để đặt xe |
+| **Driver** | Primary (con người) | Tài xế nhận và thực hiện chuyến đi |
+| **Operator Staff** | Primary (con người) | Nhân viên vận hành / quản trị hệ thống |
+| **System** | Secondary (nội bộ) | Các tiến trình tự động của hệ thống (matching, tính cước, gửi thông báo, ghi log) |
+| **Payment Gateway** | Secondary (bên ngoài) | Nhà cung cấp thanh toán điện tử bên thứ ba |
+
+---
+
+## 11.2. Danh sách Use Case theo Actor
+
+### Actor: Customer
+
+| Mã UC | Tên Use Case |
+|---|---|
+| UC01 | Đăng ký tài khoản |
+| UC02 | Đăng nhập |
+| UC03 | Cập nhật thông tin cá nhân |
+| UC04 | Quản lý địa điểm đã lưu |
+| UC05 | Đặt chuyến |
+| UC06 | Theo dõi chuyến đi |
+| UC07 | Hủy chuyến |
+| UC08 | Xem lịch sử chuyến đi |
+| UC09 | Thanh toán chuyến đi |
+| UC10 | Đánh giá tài xế |
+| UC11 | Nhận thông báo |
+
+### Actor: Driver
+
+| Mã UC | Tên Use Case |
+|---|---|
+| UC12 | Đăng ký / được tạo tài khoản tài xế |
+| UC13 | Đăng nhập |
+| UC14 | Cập nhật hồ sơ & phương tiện |
+| UC15 | Cập nhật trạng thái hoạt động |
+| UC16 | Nhận đề xuất chuyến |
+| UC17 | Chấp nhận / từ chối chuyến |
+| UC18 | Cập nhật trạng thái chuyến đi |
+| UC19 | Xác nhận thanh toán tiền mặt |
+| UC20 | Nhận thông báo |
+
+### Actor: Operator Staff
+
+| Mã UC | Tên Use Case |
+|---|---|
+| UC21 | Đăng nhập quản trị |
+| UC22 | Quản lý khách hàng |
+| UC23 | Quản lý tài xế & phương tiện |
+| UC24 | Theo dõi chuyến đang diễn ra |
+| UC25 | Xử lý sự cố chuyến đi |
+| UC26 | Xem báo cáo vận hành |
+| UC27 | Quản lý phân quyền tài khoản (Admin cấp cao) |
+
+### Actor: System (tiến trình nội bộ, không do người dùng trực tiếp kích hoạt)
+
+| Mã UC | Tên Use Case |
+|---|---|
+| UC28 | Tìm & điều phối tài xế (Matching) |
+| UC29 | Tính cước chuyến đi |
+| UC30 | Gửi thông báo |
+| UC31 | Ghi log thao tác quan trọng |
+
+### Actor: Payment Gateway
+
+| Mã UC | Tên Use Case |
+|---|---|
+| UC32 | Xử lý giao dịch thanh toán điện tử |
+
+**Tổng cộng: 32 Use Case**
+
+---
+
+## 11.3. Use Case Diagram (Mermaid flowchart — mô phỏng, GitHub render được)
+
+> Ghi chú: Mermaid chưa hỗ trợ chuẩn UML Use Case Diagram (hình elip + stickman), nên bên dưới dùng `flowchart` để mô phỏng quan hệ Actor–UseCase. Nếu cần đúng chuẩn UML, dùng bản PlantUML ở mục 11.4.
+
+```mermaid
+flowchart LR
+    subgraph ACTORS[" "]
+        Customer((Customer))
+        Driver((Driver))
+        Staff((Operator Staff))
+        Sys((System))
+        Gateway((Payment Gateway))
+    end
+
+    subgraph CUSTOMER_UC["Use Case - Customer"]
+        UC01[UC01 Đăng ký tài khoản]
+        UC02[UC02 Đăng nhập]
+        UC03[UC03 Cập nhật thông tin cá nhân]
+        UC04[UC04 Quản lý địa điểm đã lưu]
+        UC05[UC05 Đặt chuyến]
+        UC06[UC06 Theo dõi chuyến đi]
+        UC07[UC07 Hủy chuyến]
+        UC08[UC08 Xem lịch sử chuyến đi]
+        UC09[UC09 Thanh toán chuyến đi]
+        UC10[UC10 Đánh giá tài xế]
+        UC11[UC11 Nhận thông báo]
+    end
+
+    subgraph DRIVER_UC["Use Case - Driver"]
+        UC12[UC12 Đăng ký/Tạo tài khoản tài xế]
+        UC13[UC13 Đăng nhập]
+        UC14[UC14 Cập nhật hồ sơ & phương tiện]
+        UC15[UC15 Cập nhật trạng thái hoạt động]
+        UC16[UC16 Nhận đề xuất chuyến]
+        UC17[UC17 Chấp nhận/Từ chối chuyến]
+        UC18[UC18 Cập nhật trạng thái chuyến đi]
+        UC19[UC19 Xác nhận thanh toán tiền mặt]
+        UC20[UC20 Nhận thông báo]
+    end
+
+    subgraph STAFF_UC["Use Case - Operator Staff"]
+        UC21[UC21 Đăng nhập quản trị]
+        UC22[UC22 Quản lý khách hàng]
+        UC23[UC23 Quản lý tài xế & phương tiện]
+        UC24[UC24 Theo dõi chuyến đang diễn ra]
+        UC25[UC25 Xử lý sự cố chuyến đi]
+        UC26[UC26 Xem báo cáo vận hành]
+        UC27[UC27 Quản lý phân quyền tài khoản]
+    end
+
+    subgraph SYS_UC["Use Case - System"]
+        UC28[UC28 Tìm & điều phối tài xế]
+        UC29[UC29 Tính cước chuyến đi]
+        UC30[UC30 Gửi thông báo]
+        UC31[UC31 Ghi log thao tác quan trọng]
+    end
+
+    subgraph GW_UC["Use Case - Payment Gateway"]
+        UC32[UC32 Xử lý giao dịch thanh toán điện tử]
+    end
+
+    Customer --> UC01
+    Customer --> UC02
+    Customer --> UC03
+    Customer --> UC04
+    Customer --> UC05
+    Customer --> UC06
+    Customer --> UC07
+    Customer --> UC08
+    Customer --> UC09
+    Customer --> UC10
+    Customer --> UC11
+
+    Driver --> UC12
+    Driver --> UC13
+    Driver --> UC14
+    Driver --> UC15
+    Driver --> UC16
+    Driver --> UC17
+    Driver --> UC18
+    Driver --> UC19
+    Driver --> UC20
+
+    Staff --> UC21
+    Staff --> UC22
+    Staff --> UC23
+    Staff --> UC24
+    Staff --> UC25
+    Staff --> UC26
+    Staff --> UC27
+
+    Sys --> UC28
+    Sys --> UC29
+    Sys --> UC30
+    Sys --> UC31
+
+    Gateway --> UC32
+
+    UC05 -. include .-> UC28
+    UC17 -. include .-> UC28
+    UC18 -. include .-> UC29
+    UC09 -. include .-> UC32
+    UC05 -. include .-> UC30
+    UC17 -. include .-> UC30
+    UC18 -. include .-> UC30
+    UC09 -. include .-> UC30
+    UC25 -. include .-> UC31
+    UC27 -. include .-> UC31
+```
+
+---
+
+## 11.4. Use Case Diagram (PlantUML — chuẩn UML thật, dùng cho các công cụ hỗ trợ PlantUML như VSCode extension, plantuml.com)
+
+```plantuml
+@startuml
+left to right direction
+actor Customer
+actor Driver
+actor "Operator Staff" as Staff
+actor System as Sys
+actor "Payment Gateway" as Gateway
+
+rectangle "CAB System" {
+  usecase "UC01 Đăng ký tài khoản" as UC01
+  usecase "UC02 Đăng nhập" as UC02
+  usecase "UC03 Cập nhật thông tin cá nhân" as UC03
+  usecase "UC04 Quản lý địa điểm đã lưu" as UC04
+  usecase "UC05 Đặt chuyến" as UC05
+  usecase "UC06 Theo dõi chuyến đi" as UC06
+  usecase "UC07 Hủy chuyến" as UC07
+  usecase "UC08 Xem lịch sử chuyến đi" as UC08
+  usecase "UC09 Thanh toán chuyến đi" as UC09
+  usecase "UC10 Đánh giá tài xế" as UC10
+  usecase "UC11 Nhận thông báo" as UC11
+
+  usecase "UC12 Đăng ký/Tạo tài khoản tài xế" as UC12
+  usecase "UC13 Đăng nhập" as UC13d
+  usecase "UC14 Cập nhật hồ sơ & phương tiện" as UC14
+  usecase "UC15 Cập nhật trạng thái hoạt động" as UC15
+  usecase "UC16 Nhận đề xuất chuyến" as UC16
+  usecase "UC17 Chấp nhận/Từ chối chuyến" as UC17
+  usecase "UC18 Cập nhật trạng thái chuyến đi" as UC18
+  usecase "UC19 Xác nhận thanh toán tiền mặt" as UC19
+  usecase "UC20 Nhận thông báo" as UC20
+
+  usecase "UC21 Đăng nhập quản trị" as UC21
+  usecase "UC22 Quản lý khách hàng" as UC22
+  usecase "UC23 Quản lý tài xế & phương tiện" as UC23
+  usecase "UC24 Theo dõi chuyến đang diễn ra" as UC24
+  usecase "UC25 Xử lý sự cố chuyến đi" as UC25
+  usecase "UC26 Xem báo cáo vận hành" as UC26
+  usecase "UC27 Quản lý phân quyền tài khoản" as UC27
+
+  usecase "UC28 Tìm & điều phối tài xế" as UC28
+  usecase "UC29 Tính cước chuyến đi" as UC29
+  usecase "UC30 Gửi thông báo" as UC30
+  usecase "UC31 Ghi log thao tác quan trọng" as UC31
+
+  usecase "UC32 Xử lý giao dịch thanh toán điện tử" as UC32
+}
+
+Customer --> UC01
+Customer --> UC02
+Customer --> UC03
+Customer --> UC04
+Customer --> UC05
+Customer --> UC06
+Customer --> UC07
+Customer --> UC08
+Customer --> UC09
+Customer --> UC10
+Customer --> UC11
+
+Driver --> UC12
+Driver --> UC13d
+Driver --> UC14
+Driver --> UC15
+Driver --> UC16
+Driver --> UC17
+Driver --> UC18
+Driver --> UC19
+Driver --> UC20
+
+Staff --> UC21
+Staff --> UC22
+Staff --> UC23
+Staff --> UC24
+Staff --> UC25
+Staff --> UC26
+Staff --> UC27
+
+Sys --> UC28
+Sys --> UC29
+Sys --> UC30
+Sys --> UC31
+
+Gateway --> UC32
+
+UC05 ..> UC28 : <<include>>
+UC17 ..> UC28 : <<include>>
+UC18 ..> UC29 : <<include>>
+UC09 ..> UC32 : <<include>>
+UC05 ..> UC30 : <<include>>
+UC17 ..> UC30 : <<include>>
+UC18 ..> UC30 : <<include>>
+UC09 ..> UC30 : <<include>>
+UC25 ..> UC31 : <<include>>
+UC27 ..> UC31 : <<include>>
+@enduml
+```
+
+---
+
+# Bước 12: Bảng Đặc tả Use Case (Use Case Specification)
+
+## 12.1. Nhóm Customer
+
+| Mã UC | Tên UC | Actor | Mô tả | Điều kiện tiên quyết | Luồng chính (tóm tắt) | Luồng phụ / Ngoại lệ | Điều kiện kết thúc | BR/FR liên quan |
+|---|---|---|---|---|---|---|---|---|
+| UC01 | Đăng ký tài khoản | Customer | Khách hàng tạo tài khoản mới để sử dụng hệ thống | Chưa có tài khoản | 1. Nhập thông tin cá nhân → 2. Hệ thống kiểm tra hợp lệ → 3. Xác thực OTP/email → 4. Tạo tài khoản | EX-17: sai OTP nhiều lần → khóa tạm | Tài khoản được tạo, trạng thái "active" | BR01, FR51–FR54 |
+| UC02 | Đăng nhập | Customer | Khách hàng đăng nhập để sử dụng các chức năng | Đã có tài khoản | 1. Nhập tài khoản/mật khẩu → 2. Hệ thống xác thực → 3. Cấp quyền truy cập | EX-17: sai nhiều lần → khóa tạm | Đăng nhập thành công, vào màn hình chính | BR02, BR03, FR56–FR58 |
+| UC03 | Cập nhật thông tin cá nhân | Customer | Khách hàng chỉnh sửa hồ sơ cá nhân | Đã đăng nhập | 1. Vào màn hình hồ sơ → 2. Chỉnh sửa thông tin → 3. Lưu | Thông tin không hợp lệ → báo lỗi, không lưu | Thông tin được cập nhật | BR05 |
+| UC04 | Quản lý địa điểm đã lưu | Customer | Khách hàng thêm/sửa/xóa địa điểm thường dùng | Đã đăng nhập | 1. Chọn "Thêm địa điểm" → 2. Nhập tên & tọa độ → 3. Lưu | — | Danh sách địa điểm được cập nhật | BR06 |
+| UC05 | Đặt chuyến | Customer | Khách hàng tạo yêu cầu đặt xe | Đã đăng nhập | 1. Nhập điểm đón/đến → 2. Chọn loại xe → 3. Xác nhận đặt → 4. Hệ thống include UC28 (tìm tài xế) và UC30 (gửi thông báo xác nhận) | EX-01: chờ quá lâu không tìm được tài xế → thông báo; Khách hàng có thể hủy trước khi có tài xế (FR08) | Yêu cầu được ghi nhận, chờ ghép tài xế | BR11, FR01–FR08, RULE-06/07 |
+| UC06 | Theo dõi chuyến đi | Customer | Khách hàng xem trạng thái/vị trí tài xế theo thời gian thực | Chuyến đã được tạo | 1. Mở màn hình theo dõi → 2. Hệ thống hiển thị trạng thái & vị trí tài xế theo thời gian thực | EX-08: mất kết nối → tự đồng bộ lại khi có mạng | Khách hàng nắm được tiến trình chuyến | BR16, FR22–FR28 |
+| UC07 | Hủy chuyến | Customer | Khách hàng hủy chuyến trước khi tài xế đến điểm đón | Chuyến ở trạng thái chưa "đến điểm đón" | 1. Chọn "Hủy chuyến" → 2. Xác nhận lý do → 3. Hệ thống cập nhật trạng thái & giải phóng tài xế | RULE-10: không hủy được sau khi tài xế đã đến điểm đón | Chuyến ở trạng thái "đã hủy" | RULE-10, FR30–FR31 |
+| UC08 | Xem lịch sử chuyến đi | Customer | Khách hàng xem lại các chuyến đã thực hiện | Đã đăng nhập | 1. Vào mục "Lịch sử" → 2. Hệ thống hiển thị danh sách chuyến kèm chi tiết & số tiền | Không có dữ liệu → hiển thị danh sách rỗng | Khách hàng xem được lịch sử | BR07 |
+| UC09 | Thanh toán chuyến đi | Customer | Khách hàng thanh toán sau khi hoàn thành chuyến | Chuyến ở trạng thái "hoàn thành" | 1. Xem hóa đơn → 2. Chọn hình thức thanh toán → 3a. Tiền mặt: xác nhận trực tiếp; 3b. Điện tử: include UC32 → 4. include UC30 (thông báo kết quả) | EX-10: giao dịch điện tử thất bại → thông báo, cho thử lại | Trạng thái thanh toán = "hoàn tất" | BR18–BR22, RULE-11–13, FR32–FR40 |
+| UC10 | Đánh giá tài xế | Customer | Khách hàng đánh giá tài xế sau chuyến | Thanh toán đã hoàn tất | 1. Hiển thị màn hình đánh giá → 2. Chọn số sao, nhập nhận xét → 3. Gửi đánh giá | Khách hàng bỏ qua → không ghi nhận đánh giá (EX-16) | Đánh giá được lưu, cập nhật rating tài xế | RULE-16/17, FR46–FR50 |
+| UC11 | Nhận thông báo | Customer | Khách hàng nhận thông báo tại các mốc quan trọng | Có sự kiện phát sinh (đặt chuyến, ghép tài xế, hoàn thành, thanh toán...) | 1. Hệ thống (UC30) gửi thông báo → 2. Khách hàng nhận trên app | EX-14/EX-15: gửi lỗi hoặc tắt quyền thông báo → vẫn cập nhật trạng thái trong app | Khách hàng được cập nhật thông tin | BR23, FR41–FR45 |
+
+## 12.2. Nhóm Driver
+
+| Mã UC | Tên UC | Actor | Mô tả | Điều kiện tiên quyết | Luồng chính (tóm tắt) | Luồng phụ / Ngoại lệ | Điều kiện kết thúc | BR/FR liên quan |
+|---|---|---|---|---|---|---|---|---|
+| UC12 | Đăng ký/Tạo tài khoản tài xế | Driver | Tài xế tự đăng ký hoặc được nhân viên vận hành tạo tài khoản | Chưa có tài khoản | 1. Nhập thông tin cá nhân & phương tiện → 2. Xác thực → 3. Tạo tài khoản | Nhân viên tạo thay tài xế (FR55) | Tài khoản tài xế được tạo | BR01, FR51–FR55 |
+| UC13 | Đăng nhập | Driver | Tài xế đăng nhập để sử dụng hệ thống | Đã có tài khoản | Giống UC02 nhưng cho vai trò Driver | EX-17 | Đăng nhập thành công | BR02, BR03 |
+| UC14 | Cập nhật hồ sơ & phương tiện | Driver | Tài xế cập nhật thông tin cá nhân, phương tiện | Đã đăng nhập | 1. Vào hồ sơ → 2. Chỉnh sửa thông tin/phương tiện → 3. Lưu | — | Hồ sơ được cập nhật | BR08 |
+| UC15 | Cập nhật trạng thái hoạt động | Driver | Tài xế chuyển đổi trạng thái sẵn sàng/bận/ngoại tuyến | Đã đăng nhập | 1. Chọn trạng thái mong muốn → 2. Hệ thống cập nhật | RULE-01: chỉ tài xế "sẵn sàng" mới được đề xuất chuyến | Trạng thái tài xế được cập nhật | BR09, RULE-01 |
+| UC16 | Nhận đề xuất chuyến | Driver | Tài xế nhận thông báo về chuyến phù hợp | Tài xế đang "sẵn sàng", nằm trong bán kính tìm kiếm | 1. Hệ thống (UC28) gửi đề xuất → 2. Tài xế nhận thông báo trên app | EX-05: tài xế ngoại tuyến giữa chừng → coi như không phản hồi | Tài xế nhận được đề xuất chuyến | RULE-01–04, FR15 |
+| UC17 | Chấp nhận / Từ chối chuyến | Driver | Tài xế phản hồi đề xuất chuyến | Đã nhận đề xuất (UC16) | 1. Tài xế bấm Chấp nhận hoặc Từ chối trong thời gian quy định → 2. Hệ thống ghi nhận, include UC28 (nếu từ chối, tìm tài xế khác) và UC30 (thông báo) | EX-02: bấm chấp nhận trễ hạn → bị từ chối, thông báo đã ghép tài xế khác; EX-04: hai tài xế bấm gần đồng thời → chỉ tài xế đầu tiên theo timestamp được nhận | Chuyến chuyển sang "đã ghép" hoặc tìm tài xế kế tiếp | RULE-05/06, FR16–FR19 |
+| UC18 | Cập nhật trạng thái chuyến đi | Driver | Tài xế cập nhật các mốc trong hành trình | Tài xế đã nhận chuyến (UC17) | 1. Đến điểm đón → 2. Đón khách → 3. Di chuyển → 4. Hoàn thành, mỗi bước include UC30 (thông báo) và bước cuối include UC29 (tính cước) | EX-06: khách không có mặt tại điểm đón → chuyển nhân viên vận hành xử lý (UC25); EX-07: mất kết nối → đồng bộ lại khi có mạng | Chuyến đạt trạng thái "hoàn thành" | RULE-08/09, FR25–FR29 |
+| UC19 | Xác nhận thanh toán tiền mặt | Driver | Tài xế xác nhận đã nhận tiền mặt từ khách | Chuyến đã hoàn thành, khách chọn thanh toán tiền mặt | 1. Nhận tiền từ khách → 2. Bấm xác nhận trên app → 3. Hệ thống cập nhật trạng thái thanh toán | EX-12: tranh chấp số tiền → chuyển nhân viên vận hành xử lý | Thanh toán ở trạng thái "hoàn tất" | BR19, FR36 |
+| UC20 | Nhận thông báo | Driver | Tài xế nhận thông báo về chuyến mới/thay đổi | Có sự kiện phát sinh liên quan đến tài xế | Giống UC11 nhưng cho vai trò Driver | EX-14/EX-15 | Tài xế được cập nhật thông tin | BR24, FR41–FR45 |
+
+## 12.3. Nhóm Operator Staff
+
+| Mã UC | Tên UC | Actor | Mô tả | Điều kiện tiên quyết | Luồng chính (tóm tắt) | Luồng phụ / Ngoại lệ | Điều kiện kết thúc | BR/FR liên quan |
+|---|---|---|---|---|---|---|---|---|
+| UC21 | Đăng nhập quản trị | Operator Staff | Nhân viên đăng nhập vào giao diện quản trị | Đã có tài khoản nhân viên | 1. Nhập tài khoản/mật khẩu → 2. Hệ thống xác thực & phân quyền theo vai trò | EX-17 | Đăng nhập thành công, vào trang quản trị | BR02–BR04, FR56–FR58 |
+| UC22 | Quản lý khách hàng | Operator Staff | Xem/tra cứu/quản lý thông tin khách hàng | Đã đăng nhập quản trị | 1. Tìm kiếm khách hàng → 2. Xem/chỉnh sửa thông tin | — | Thông tin khách hàng được cập nhật/tra cứu | BR26, FR60 |
+| UC23 | Quản lý tài xế & phương tiện | Operator Staff | Xem/tra cứu/quản lý thông tin tài xế và phương tiện | Đã đăng nhập quản trị | 1. Tìm kiếm tài xế → 2. Xem/chỉnh sửa thông tin | — | Thông tin tài xế/phương tiện được cập nhật | BR27, FR60 |
+| UC24 | Theo dõi chuyến đang diễn ra | Operator Staff | Xem danh sách và trạng thái các chuyến đang hoạt động | Đã đăng nhập quản trị | 1. Vào màn hình giám sát → 2. Hệ thống hiển thị danh sách chuyến real-time | — | Nhân viên nắm được tình trạng vận hành | BR28, FR59 |
+| UC25 | Xử lý sự cố chuyến đi | Operator Staff | Can thiệp xử lý khi chuyến gặp lỗi | Phát hiện/nhận báo cáo sự cố (từ UC18-EX06 hoặc UC19-EX12) | 1. Tra cứu chi tiết chuyến → 2. Thực hiện thao tác xử lý → 3. Include UC31 (ghi log) | EX-20: thao tác nhạy cảm nhưng không đủ quyền → từ chối, yêu cầu chuyển cấp cao hơn | Sự cố được xử lý, có ghi log | BR29, RULE-21/22, FR61–FR64 |
+| UC26 | Xem báo cáo vận hành | Operator Staff | Xem báo cáo số chuyến, doanh thu, tỷ lệ hoàn thành/hủy, hiệu quả tài xế | Đã đăng nhập quản trị | 1. Chọn loại báo cáo & khoảng thời gian → 2. Hệ thống tổng hợp và hiển thị | EX-22: không có dữ liệu → hiển thị thông báo phù hợp | Báo cáo được hiển thị | BR31–BR33, RULE-23, FR65–FR69 |
+| UC27 | Quản lý phân quyền tài khoản | Operator Staff (Admin cấp cao) | Cấp/thu hồi quyền hạn cho nhân viên vận hành | Đã đăng nhập với quyền admin cấp cao | 1. Chọn tài khoản nhân viên → 2. Gán/thay đổi vai trò, quyền hạn → 3. Include UC31 (ghi log) | EX-19: nhân viên thường cố truy cập chức năng này → bị từ chối | Phân quyền được cập nhật | RULE-20/21 |
+
+## 12.4. Nhóm System (tiến trình nội bộ)
+
+| Mã UC | Tên UC | Actor | Mô tả | Điều kiện tiên quyết | Luồng chính (tóm tắt) | Luồng phụ / Ngoại lệ | Điều kiện kết thúc | BR/FR liên quan |
+|---|---|---|---|---|---|---|---|---|
+| UC28 | Tìm & điều phối tài xế | System | Tự động tìm và ghép tài xế phù hợp cho một chuyến | Có yêu cầu đặt chuyến mới hoặc tài xế trước đó từ chối | 1. Xác định vị trí khách → 2. Lọc tài xế sẵn sàng trong bán kính → 3. Lọc theo loại xe & rating (nếu yêu cầu) → 4. Gửi đề xuất cho tài xế ưu tiên cao nhất → 5. Chờ phản hồi | EX-01/EX-03: hết tài xế hoặc quá thời gian → báo "không tìm được tài xế"; EX-02/EX-04/EX-05: các tình huống phản hồi trễ/trùng/mất kết nối | Chuyến được ghép tài xế hoặc kết luận không tìm được | RULE-01–07, FR09–FR21 |
+| UC29 | Tính cước chuyến đi | System | Tự động tính số tiền khách phải trả sau khi hoàn thành chuyến | Chuyến ở trạng thái "hoàn thành" | 1. Tính quãng đường/thời gian thực tế → 2. Áp dụng công thức tính cước theo loại xe → 3. Ghi nhận số tiền vào chuyến | — | Chuyến có `fare_amount` được xác định | RULE-11, FR32–FR33 |
+| UC30 | Gửi thông báo | System | Gửi thông báo tự động cho khách hàng/tài xế tại các mốc sự kiện | Có sự kiện phát sinh (đặt chuyến, ghép tài xế, đến điểm đón, hoàn thành, kết quả thanh toán...) | 1. Lắng nghe sự kiện → 2. Xác định đối tượng nhận → 3. Soạn nội dung theo mẫu → 4. Gửi qua kênh tương ứng → 5. Ghi nhận trạng thái gửi | EX-14: gửi thất bại → ghi log, retry giới hạn số lần, không chặn luồng chính (RULE-14) | Thông báo được gửi (hoặc ghi nhận thất bại) | BR23/BR24, RULE-14/15, FR41–FR45 |
+| UC31 | Ghi log thao tác quan trọng | System | Ghi lại các thao tác quản trị nhạy cảm để phục vụ tra soát | Có thao tác quản trị được thực hiện (UC25, UC27...) | 1. Nhận sự kiện thao tác → 2. Ghi nhận người thực hiện, hành động, đối tượng, thời gian vào AuditLog | — | Bản ghi log được lưu | BR35, RULE-22, FR64 |
+
+## 12.5. Nhóm Payment Gateway
+
+| Mã UC | Tên UC | Actor | Mô tả | Điều kiện tiên quyết | Luồng chính (tóm tắt) | Luồng phụ / Ngoại lệ | Điều kiện kết thúc | BR/FR liên quan |
+|---|---|---|---|---|---|---|---|---|
+| UC32 | Xử lý giao dịch thanh toán điện tử | Payment Gateway | Nhà cung cấp thanh toán bên ngoài xử lý giao dịch điện tử | Khách hàng chọn thanh toán điện tử (từ UC09) | 1. Hệ thống CAB gửi yêu cầu thanh toán (không kèm thông tin thẻ) → 2. Payment Gateway xử lý giao dịch → 3. Trả kết quả (thành công/thất bại) về hệ thống CAB | EX-10: giao dịch thất bại → hệ thống CAB thông báo khách hàng; EX-11: timeout kết nối → hệ thống CAB truy vấn xác nhận lại trạng thái trước khi cập nhật; EX-13: callback không về được → cần đối soát định kỳ | Trạng thái thanh toán được cập nhật chính xác | BR20–BR22, RULE-12/13, FR37–FR39 |
+
+---
+
+## Ghi chú tổng hợp
+
+- Tổng cộng **32 Use Case** được xác định, bao phủ đầy đủ 5 Actor (Customer, Driver, Operator Staff, System, Payment Gateway) và toàn bộ các nhóm Functional Requirement đã phân rã ở Bước 7.
+- Quan hệ **`<<include>>`** được sử dụng cho các Use Case luôn được gọi kèm theo một use case khác (ví dụ: UC05 Đặt chuyến luôn kéo theo UC28 Tìm tài xế và UC30 Gửi thông báo) — thể hiện đúng các Business Process đã mô hình hóa ở Bước 6.
+- Các Use Case thuộc actor **System** không do người dùng trực tiếp kích hoạt, nhưng vẫn cần đặc tả rõ vì đây là phần logic lõi (core logic) quan trọng nhất của hệ thống CAB — đặc biệt là UC28 (điều phối tài xế), nơi tập trung phần lớn Business Rules và Exception đã xác định ở Bước 8.
+- Bảng đặc tả ở Bước 12 hiện đang ở mức **tóm tắt (summary specification)** — đủ để review với khách hàng và làm cơ sở thiết kế màn hình/API. Nếu cần, có thể mở rộng từng UC thành **đặc tả chi tiết đầy đủ** (actor, mô tả, precondition/postcondition, main flow từng bước có số thứ tự, alternate flow, business rule áp dụng, giao diện liên quan...) cho riêng từng use case quan trọng (ví dụ UC05, UC28, UC09) trước khi bàn giao cho đội phát triển.
+
+Bạn muốn mình mở rộng đặc tả chi tiết đầy đủ (từng bước main flow có số thứ tự, precondition/postcondition tách riêng) cho một số Use Case trọng điểm — ví dụ **UC05 (Đặt chuyến)**, **UC28 (Điều phối tài xế)**, **UC09 (Thanh toán)** — không?
