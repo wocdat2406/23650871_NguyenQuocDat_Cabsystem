@@ -205,7 +205,6 @@ Với thời gian triển khai chỉ **7 tuần**, BA cần xác định rõ ph�
 - Ứng dụng di động native (iOS/Android) đầy đủ — trong 7 tuần ưu tiên nền tảng chính (web hoặc 1 nền tảng di động), việc phát triển đa nền tảng đầy đủ để giai đoạn sau
 - Tính năng phân tích nâng cao / AI dự đoán nhu cầu, tối ưu tuyến đường
 
-.....
 
 #### Bước 5: Chuyển đổi Yêu cầu thành Business Requirements (BR)
 
@@ -248,7 +247,6 @@ Sau khi hoàn thành Bước 4 (xác định phạm vi và module), BA cần **g
 - Mỗi BR sẽ là đầu vào để triển khai tiếp ở **Bước 6: xác định Actor và Use Case**, trong đó một BR có thể tương ứng với một hoặc nhiều Use Case cụ thể.
 - Trước khi chốt danh sách BR chính thức, BA nên tổ chức buổi **review với khách hàng** để xác nhận: (1) tên gọi và nội dung từng BR có đúng ý khách hàng; (2) không thiếu/thừa BR so với phạm vi đã thống nhất.
 
-......
 
 #### Bước 6: Xây dựng Business Process (Quy trình nghiệp vụ)
 
