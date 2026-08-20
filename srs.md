@@ -592,3 +592,145 @@ Nguyên tắc phân rã: mỗi FR mô tả **một hành động/logic xử lý 
   - Thiết kế **wireframe/màn hình** tương ứng cho từng nhóm chức năng.
   - Làm cơ sở ước lượng khối lượng công việc (effort estimation) cho đội phát triển trong 7 tuần triển khai.
 - Một số FR liên quan đến các "Open Question" đã nêu ở Bước 6 (ví dụ FR30/FR31 – chính sách hủy chuyến, FR39 – chính sách retry thanh toán) **cần được xác nhận chi tiết với khách hàng trước khi đặc tả Use Case**, để tránh phải chỉnh sửa nhiều lần ở giai đoạn sau.
+
+#### Bước 8: Business Rules (Quy tắc nghiệp vụ) và Exception Handling (Xử lý ngoại lệ)
+
+Từ các Functional Requirement (FR01–FR69) đã phân rã ở Bước 7, tiến hành xác định **Business Rules (quy tắc nghiệp vụ ràng buộc hệ thống)** và **Exception (các tình huống ngoại lệ phát sinh trong thực tế)** kèm cách xử lý tương ứng. Đây là cơ sở quan trọng để đội phát triển thiết kế logic xử lý chính xác, tránh sai sót khi vận hành thực tế.
+
+Quy ước ký hiệu:
+- **RULE-xx**: Business Rule (quy tắc nghiệp vụ bắt buộc phải tuân theo)
+- **EX-xx**: Exception (tình huống ngoại lệ) kèm cách xử lý
+
+---
+
+##### 8.1. Nhóm: Đặt chuyến & Tìm tài xế (liên quan BP01, BP02)
+
+**Business Rules**
+
+| Mã | Quy tắc nghiệp vụ | Diễn giải |
+|---|---|---|
+| RULE-01 | Chỉ tài xế ở trạng thái "sẵn sàng" mới được nhận chuyến | Hệ thống chỉ gửi đề xuất chuyến cho tài xế đang ở trạng thái online/sẵn sàng, không gửi cho tài xế đang bận hoặc ngoại tuyến |
+| RULE-02 | Tài xế phải nằm trong bán kính tìm kiếm quy định | Chỉ những tài xế có vị trí nằm trong bán kính cấu hình xung quanh điểm đón mới được đưa vào danh sách đề xuất |
+| RULE-03 | Tài xế phải đúng loại xe khách hàng yêu cầu | Hệ thống chỉ đề xuất tài xế có loại phương tiện khớp với loại xe khách hàng đã chọn |
+| RULE-04 | Một tài xế chỉ được đề xuất cho một chuyến tại một thời điểm | Trong lúc tài xế đang được đề xuất/xử lý cho một chuyến, hệ thống không gửi đề xuất chuyến khác cho tài xế đó cho tới khi có phản hồi |
+| RULE-05 | Thời gian phản hồi của tài xế bị giới hạn (timeout) | Tài xế phải chấp nhận/từ chối trong khoảng thời gian quy định (giá trị cụ thể **cần xác nhận với khách hàng** — Open Question) |
+| RULE-06 | Khách hàng không cần tạo lại yêu cầu khi tài xế từ chối | Khi tài xế được đề xuất từ chối/không phản hồi, hệ thống tự tìm tài xế kế tiếp mà không yêu cầu khách hàng thao tác lại |
+| RULE-07 | Giới hạn số lần tìm tài xế / thời gian tìm tối đa | Hệ thống cần có giới hạn tổng thời gian hoặc số lượt thử tìm tài xế trước khi kết luận "không tìm được tài xế" (giá trị cụ thể **cần xác nhận** — Open Question) |
+
+**Exceptions**
+
+| Mã | Tình huống ngoại lệ | Cách xử lý |
+|---|---|---|
+| EX-01 | Khách hàng chờ tìm tài xế quá lâu | Hệ thống đặt ngưỡng thời gian tìm kiếm tối đa (theo RULE-07); nếu vượt ngưỡng mà chưa tìm được tài xế, hệ thống dừng tìm kiếm và thông báo rõ cho khách hàng, đồng thời gợi ý thử lại sau |
+| EX-02 | Tài xế được đề xuất bấm chấp nhận nhưng đã quá thời hạn phản hồi | Hệ thống từ chối thao tác chấp nhận trễ hạn (đã tự động chuyển sang tài xế khác ở RULE-05/RULE-06), thông báo cho tài xế biết chuyến đã được ghép cho tài xế khác |
+| EX-03 | Không còn tài xế nào phù hợp trong bán kính tìm kiếm | Hệ thống có thể mở rộng dần bán kính tìm kiếm theo bước tăng dần (nếu được cấu hình); nếu vẫn không có, thực hiện theo EX-01 |
+| EX-04 | Hai tài xế cùng bấm chấp nhận gần như đồng thời (trường hợp lỗi đồng bộ) | Hệ thống chỉ ghi nhận tài xế đầu tiên theo timestamp xử lý tại server; tài xế còn lại nhận thông báo "chuyến đã được nhận bởi tài xế khác" |
+| EX-05 | Tài xế đang được đề xuất bỗng chuyển trạng thái ngoại tuyến (mất kết nối/tắt app) | Hệ thống coi như không phản hồi, áp dụng RULE-05/RULE-06 để chuyển sang tài xế kế tiếp |
+
+---
+
+##### 8.2. Nhóm: Thực hiện chuyến đi (liên quan BP03)
+
+**Business Rules**
+
+| Mã | Quy tắc nghiệp vụ | Diễn giải |
+|---|---|---|
+| RULE-08 | Trạng thái chuyến đi phải thay đổi tuần tự | Chuyến đi chỉ được chuyển trạng thái theo đúng thứ tự: đã nhận → đến điểm đón → đã đón khách → đang di chuyển → hoàn thành; không được nhảy cóc trạng thái |
+| RULE-09 | Chỉ tài xế được gán cho chuyến mới được cập nhật trạng thái chuyến đó | Hệ thống kiểm tra tài xế thực hiện thao tác cập nhật đúng là tài xế đang được gán cho chuyến |
+| RULE-10 | Khách hàng chỉ được hủy chuyến trước khi tài xế đến điểm đón | Sau khi tài xế đã đến điểm đón/đón khách, khách hàng không thể tự hủy chuyến qua app (phải liên hệ hỗ trợ) |
+
+**Exceptions**
+
+| Mã | Tình huống ngoại lệ | Cách xử lý |
+|---|---|---|
+| EX-06 | Khách hàng không có mặt tại điểm đón sau khi tài xế đã đến | Hệ thống cho phép tài xế chờ trong một khoảng thời gian quy định (giá trị **cần xác nhận** — Open Question); nếu hết thời gian, tài xế có thể báo "khách không có mặt" và chuyển cho nhân viên vận hành xử lý (BP08) |
+| EX-07 | Tài xế mất kết nối mạng trong khi đang thực hiện chuyến | Ứng dụng tài xế lưu tạm trạng thái cục bộ; khi có kết nối trở lại, đồng bộ lại trạng thái mới nhất với hệ thống (cơ chế đồng bộ chi tiết **cần xác nhận kỹ thuật** — Open Question) |
+| EX-08 | Khách hàng mất kết nối trong khi theo dõi chuyến | Hệ thống vẫn tiếp tục xử lý chuyến bình thường ở phía tài xế; khi khách hàng có kết nối lại, app tự đồng bộ lại trạng thái chuyến hiện tại |
+| EX-09 | Tài xế hủy chuyến giữa chừng (sau khi đã nhận) | Hệ thống ghi nhận lý do hủy, chuyển chuyến trở lại quy trình tìm tài xế khác (BP02) nếu khách hàng vẫn muốn tiếp tục, đồng thời có thể ảnh hưởng đến điểm đánh giá/uy tín của tài xế (chính sách phạt **cần xác nhận** — Open Question) |
+
+---
+
+##### 8.3. Nhóm: Tính cước & Thanh toán (liên quan BP04)
+
+**Business Rules**
+
+| Mã | Quy tắc nghiệp vụ | Diễn giải |
+|---|---|---|
+| RULE-11 | Cước phí chỉ được tính sau khi chuyến ở trạng thái "hoàn thành" | Hệ thống không tính cước cho chuyến chưa hoàn thành hoặc đã hủy |
+| RULE-12 | Không lưu trực tiếp thông tin nhạy cảm thanh toán trong hệ thống CAB | Mọi thông tin thẻ/tài khoản thanh toán được xử lý và lưu trữ tại nhà cung cấp thanh toán bên ngoài |
+| RULE-13 | Một chuyến chỉ có một trạng thái thanh toán tại một thời điểm | Trạng thái thanh toán (chưa thanh toán/đang xử lý/hoàn tất/thất bại) không được tồn tại song song hai giá trị mâu thuẫn |
+
+**Exceptions**
+
+| Mã | Tình huống ngoại lệ | Cách xử lý |
+|---|---|---|
+| EX-10 | Giao dịch thanh toán điện tử thất bại | Hệ thống thông báo ngay cho khách hàng, giữ nguyên trạng thái "chưa thanh toán", cho phép khách hàng chọn lại phương thức thanh toán hoặc thử lại (chính sách số lần thử lại tối đa **cần xác nhận** — Open Question) |
+| EX-11 | Kết nối đến nhà cung cấp thanh toán bị gián đoạn (timeout) | Hệ thống không tự động coi là thất bại ngay; thực hiện truy vấn xác nhận lại trạng thái giao dịch với nhà cung cấp trước khi cập nhật, tránh trường hợp trừ tiền nhưng hệ thống ghi nhận sai |
+| EX-12 | Khách hàng chọn tiền mặt nhưng không đủ tiền hoặc tranh chấp số tiền với tài xế | Chuyển cho nhân viên vận hành xử lý (BP08); chính sách xử lý cụ thể **cần xác nhận với khách hàng** — Open Question |
+| EX-13 | Giao dịch báo thành công từ nhà cung cấp nhưng hệ thống CAB không nhận được callback | Hệ thống cần cơ chế đối soát định kỳ (reconciliation) với nhà cung cấp thanh toán để tránh sai lệch trạng thái (chi tiết kỹ thuật **cần làm rõ** — Open Question) |
+
+---
+
+##### 8.4. Nhóm: Thông báo (liên quan BP05)
+
+**Business Rules**
+
+| Mã | Quy tắc nghiệp vụ | Diễn giải |
+|---|---|---|
+| RULE-14 | Lỗi thông báo không được làm gián đoạn quy trình chính | Việc gửi thông báo thất bại không được ảnh hưởng đến luồng đặt xe, điều phối hay thanh toán |
+| RULE-15 | Mỗi sự kiện chỉ gửi một thông báo tương ứng, tránh trùng lặp | Hệ thống không gửi lặp lại nhiều thông báo cho cùng một sự kiện đã xử lý |
+
+**Exceptions**
+
+| Mã | Tình huống ngoại lệ | Cách xử lý |
+|---|---|---|
+| EX-14 | Gửi thông báo thất bại (lỗi kênh gửi) | Hệ thống ghi log lỗi, có thể thử gửi lại theo cơ chế retry giới hạn số lần, không chặn các bước xử lý nghiệp vụ khác (theo RULE-14) |
+| EX-15 | Người dùng không nhận được thông báo do tắt quyền thông báo trên thiết bị | Hệ thống vẫn cập nhật trạng thái trong app để người dùng có thể xem lại khi mở ứng dụng, không coi đây là lỗi hệ thống |
+
+---
+
+##### 8.5. Nhóm: Đánh giá tài xế (liên quan BP06)
+
+**Business Rules**
+
+| Mã | Quy tắc nghiệp vụ | Diễn giải |
+|---|---|---|
+| RULE-16 | Chỉ được đánh giá sau khi chuyến đã thanh toán hoàn tất | Khách hàng không thể gửi đánh giá cho chuyến chưa hoàn thành thanh toán |
+| RULE-17 | Mỗi chuyến chỉ được đánh giá một lần | Hệ thống không cho phép khách hàng gửi nhiều đánh giá cho cùng một chuyến |
+
+**Exceptions**
+
+| Mã | Tình huống ngoại lệ | Cách xử lý |
+|---|---|---|
+| EX-16 | Khách hàng không đánh giá (bỏ qua) | Hệ thống không ép buộc, chuyến vẫn được lưu vào lịch sử bình thường mà không có điểm đánh giá |
+
+---
+
+##### 8.6. Nhóm: Tài khoản & Xác thực (liên quan BP07)
+
+**Business Rules**
+
+| Mã | Quy tắc nghiệp vụ | Diễn giải |
+|---|---|---|
+| RULE-18 | Số điện thoại/email chỉ được đăng ký cho một tài khoản duy nhất | Hệ thống từ chối đăng ký nếu thông tin định danh đã tồn tại |
+| RULE-19 | Tài khoản phải được xác thực trước khi sử dụng chức năng chính | Người dùng chưa xác thực OTP/email chỉ được dùng chức năng giới hạn (nếu có), không được đặt xe/nhận chuyến |
+| RULE-20 | Phân quyền theo vai trò là bắt buộc cho mọi thao tác | Mỗi API/chức năng phải kiểm tra vai trò người dùng trước khi cho phép thực hiện |
+
+**Exceptions**
+
+| Mã | Tình huống ngoại lệ | Cách xử lý |
+|---|---|---|
+| EX-17 | Người dùng nhập sai thông tin đăng nhập nhiều lần | Hệ thống tạm khóa đăng nhập trong một khoảng thời gian sau số lần thử sai vượt ngưỡng (giá trị ngưỡng **cần xác nhận** — Open Question) |
+| EX-18 | Mã OTP hết hạn hoặc nhập sai | Hệ thống cho phép gửi lại mã mới, giới hạn số lần gửi lại trong khoảng thời gian nhất định |
+| EX-19 | Người dùng cố truy cập chức năng ngoài quyền hạn | Hệ thống từ chối thao tác, trả về thông báo không đủ quyền, ghi log hành vi bất thường nếu lặp lại nhiều lần |
+
+---
+
+##### 8.7. Nhóm: Quản trị & Vận hành (liên quan BP08)
+
+**Business Rules**
+
+| Mã | Quy tắc nghiệp vụ | Diễn giải |
+|---|---|---|
+| RULE-21 | Thao tác nhạy cảm chỉ dành cho nhân viên có quyền quản trị cao hơn | Ví dụ: hoàn tiền, khóa tài khoản, chỉnh sửa dữ liệu giao dịch chỉ admin cấp cao mới thực hiện được |
+| RULE-22 | Mọi thao tác quản trị quan trọng đều phải được ghi log | Không có thao tác quản trị nhạy cảm nào được thực hiện mà không lưu vết
