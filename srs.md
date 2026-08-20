@@ -5,7 +5,7 @@ bước 1: đọc và phân tích yêu cầu của khách hàng ở giai đoạn
 
 **Đóng vai trò:** BA (Business Analyst)
 
-#### Bước 1: Phân tích yêu cầu sơ  của khách hàng
+# Bước 1: Phân tích yêu cầu sơ  của khách hàng
 
 Ở giai đoạn sơ khởi (giai đoạn 1), BA cần tập trung vào việc **phân tích và tìm hiểu yêu cầu của khách hàng**.
 
