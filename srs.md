@@ -1073,3 +1073,92 @@ erDiagram
 - **Payment.provider_transaction_id** chỉ lưu mã tham chiếu giao dịch, **không lưu thông tin thẻ/tài khoản thanh toán** — đúng theo RULE-12/BR21.
 - Quan hệ **Trip – Payment** và **Trip – Rating** là 1-1 (mỗi chuyến chỉ có một bản ghi thanh toán và một đánh giá), đúng theo RULE-13 và RULE-17.
 - Mô hình hiện ở mức MVP, **chưa bao gồm** các bảng cho: khuyến mãi/mã giảm giá, đa nhà cung cấp thanh toán, đa kênh thông báo, lịch sử vị trí tài xế theo dòng thời gian chi tiết (location tracking history) — các phần này thuộc nhóm "Ngoài phạm vi" đã xác định ở Bước 4, có thể bổ sung sau mà không phá vỡ cấu trúc hiện tại (đáp ứng BG08/BR37 về kiến trúc mở rộng).
+
+#### Bước 10: Xác định Non-Functional Requirement (NFR)
+
+Sau khi hoàn tất Data Model & ERD (Bước 9), tiến hành xác định các **Non-Functional Requirement (NFR)** — các yêu cầu về chất lượng, hiệu năng, bảo mật, khả năng vận hành của hệ thống, không mô tả "hệ thống làm gì" mà mô tả "hệ thống phải đạt mức độ như thế nào".
+
+**Nguyên tắc thiết kế NFR cho giai đoạn MVP (7 tuần):**
+- Đặt ra mức yêu cầu **thực tế, đo lường được, vừa đủ** với quy mô MVP — không đặt chỉ số quá cao kiểu hệ thống lớn (ví dụ không yêu cầu phản hồi dưới 1ms, không bắt buộc kiến trúc microservices đầy đủ ngay từ đầu).
+- Vẫn phải **tôn trọng các nguyên tắc nền tảng** khách hàng đã nêu ở tài liệu gốc: hệ thống không được sập toàn bộ khi một chức năng (thanh toán, thông báo) gặp lỗi, và kiến trúc phải **có khả năng mở rộng sau này** dù MVP chưa cần triển khai đầy đủ microservices.
+
+---
+
+##### 10.1. Hiệu năng (Performance)
+
+| Mã | NFR | Diễn giải / Mức yêu cầu đề xuất cho MVP |
+|---|---|---|
+| NFR01 | Thời gian phản hồi cho thao tác đặt xe | Yêu cầu đặt xe được hệ thống tiếp nhận và phản hồi xác nhận trong khoảng **≤ 2–3 giây** ở điều kiện tải bình thường (không cần dưới 1ms) |
+| NFR02 | Thời gian tìm và đề xuất tài xế | Từ lúc yêu cầu được tiếp nhận đến khi gửi đề xuất cho tài xế đầu tiên trong khoảng **vài giây**, không cần realtime tức thời tuyệt đối ở giai đoạn MVP |
+| NFR03 | Cập nhật vị trí tài xế | Vị trí tài xế được cập nhật với tần suất hợp lý (ví dụ mỗi 5–10 giây), đủ để ước tính ETA mà không gây quá tải hệ thống |
+| NFR04 | Thời gian tải trang/màn hình chính | Các màn hình chính (trang chủ, theo dõi chuyến, lịch sử) tải trong khoảng **≤ 3 giây** với kết nối mạng bình thường |
+
+---
+
+##### 10.2. Khả năng chịu tải & Mở rộng (Scalability)
+
+| Mã | NFR | Diễn giải / Mức yêu cầu đề xuất cho MVP |
+|---|---|---|
+| NFR05 | Số lượng người dùng đồng thời (MVP) | Hệ thống đáp ứng tốt ở quy mô vừa phải phù hợp giai đoạn ra mắt (ví dụ vài trăm đến vài nghìn phiên hoạt động đồng thời — con số cụ thể **cần thống nhất với khách hàng** dựa trên quy mô thị trường mục tiêu) |
+| NFR06 | Kiến trúc theo hướng module hóa, không nhất thiết microservices ngay từ đầu | Ở giai đoạn MVP, hệ thống có thể triển khai dạng **modular monolith** (một ứng dụng nhưng phân tách rõ ràng theo module: đặt xe, điều phối, thanh toán, thông báo...), miễn là các module **tách biệt về logic và dữ liệu**, dễ dàng tách thành microservices riêng trong tương lai khi cần scale (đáp ứng BG08/BR37) |
+| NFR07 | Khả năng mở rộng độc lập ở các điểm nghẽn tiềm năng | Các phần dễ chịu tải cao (tìm tài xế, theo dõi vị trí realtime) cần được thiết kế để có thể tách ra chạy độc lập/scale riêng khi lượng người dùng tăng, mà không cần viết lại toàn bộ hệ thống |
+
+---
+
+##### 10.3. Độ tin cậy & Khả năng chịu lỗi (Reliability & Fault Tolerance)
+
+| Mã | NFR | Diễn giải / Mức yêu cầu đề xuất cho MVP |
+|---|---|---|
+| NFR08 | Cách ly lỗi giữa các chức năng | Lỗi ở phân hệ thanh toán hoặc thông báo **không được làm gián đoạn** chức năng đặt xe/điều phối — đây là yêu cầu bắt buộc dù ở mức MVP (theo RULE-14, BG06) |
+| NFR09 | Tỷ lệ hoạt động ổn định (Uptime) | Hệ thống hoạt động ổn định trong giờ cao điểm với mục tiêu uptime ở mức hợp lý cho MVP (ví dụ ~99%, chưa cần đạt chuẩn "5 số 9" của hệ thống lớn) |
+| NFR10 | Cơ chế thử lại cho tác vụ không thành công | Các tác vụ như gửi thông báo, gọi cổng thanh toán cần có cơ chế retry giới hạn số lần khi thất bại tạm thời, tránh yêu cầu người dùng thao tác lại từ đầu |
+| NFR11 | Toàn vẹn dữ liệu giao dịch | Dữ liệu về chuyến đi và thanh toán không được mất hoặc sai lệch ngay cả khi có lỗi tạm thời (ví dụ mất kết nối giữa các bước xử lý) |
+
+---
+
+##### 10.4. Bảo mật (Security)
+
+| Mã | NFR | Diễn giải / Mức yêu cầu đề xuất cho MVP |
+|---|---|---|
+| NFR12 | Mã hóa dữ liệu nhạy cảm | Mật khẩu, thông tin cá nhân cần được mã hóa/hash khi lưu trữ; dữ liệu truyền tải qua kênh mã hóa (HTTPS) |
+| NFR13 | Không lưu trữ thông tin thẻ/tài khoản thanh toán | Áp dụng đúng RULE-12/BR21 — hệ thống CAB chỉ lưu mã tham chiếu giao dịch, không lưu số thẻ hay thông tin nhạy cảm khác |
+| NFR14 | Kiểm soát truy cập theo vai trò (RBAC) | Mọi API/chức năng đều kiểm tra vai trò và quyền hạn người dùng trước khi cho phép truy cập (theo RULE-20, RULE-21) |
+| NFR15 | Bảo vệ chống truy cập trái phép | Áp dụng giới hạn số lần đăng nhập sai (theo EX-17), xác thực OTP khi đăng ký/đăng nhập ở các thao tác nhạy cảm |
+
+---
+
+##### 10.5. Khả năng bảo trì & Mở rộng chức năng (Maintainability & Extensibility)
+
+| Mã | NFR | Diễn giải / Mức yêu cầu đề xuất cho MVP |
+|---|---|---|
+| NFR16 | Dễ dàng bổ sung phương thức thanh toán mới | Kiến trúc module thanh toán cần được thiết kế tách biệt (ví dụ theo interface/adapter pattern) để thêm nhà cung cấp thanh toán mới mà không ảnh hưởng các module khác (BG08) |
+| NFR17 | Dễ dàng bổ sung kênh thông báo mới | Module thông báo thiết kế theo hướng plug-in kênh gửi (ví dụ thêm SMS, email sau này) mà không cần sửa logic nghiệp vụ chính |
+| NFR18 | Dễ dàng bổ sung loại dịch vụ/loại xe mới | Việc thêm loại xe/dịch vụ mới chỉ cần cấu hình dữ liệu (VehicleType), không cần thay đổi code lõi |
+| NFR19 | Triển khai từng phần, ít ảnh hưởng module khác | Có thể triển khai (deploy) một module cập nhật mà không cần dừng toàn bộ hệ thống hoặc ảnh hưởng các module không liên quan |
+
+---
+
+##### 10.6. Khả năng sử dụng (Usability)
+
+| Mã | NFR | Diễn giải / Mức yêu cầu đề xuất cho MVP |
+|---|---|---|
+| NFR20 | Giao diện đơn giản, dễ thao tác | Các luồng chính (đặt xe, theo dõi chuyến, thanh toán) cần tối giản số bước thao tác, phù hợp người dùng phổ thông |
+| NFR21 | Thông báo lỗi rõ ràng, dễ hiểu | Khi có lỗi (không tìm được tài xế, thanh toán thất bại...) hệ thống hiển thị thông báo rõ ràng, không dùng mã lỗi kỹ thuật khó hiểu cho người dùng cuối |
+
+---
+
+##### 10.7. Khả năng giám sát & Truy vết (Observability & Auditability)
+
+| Mã | NFR | Diễn giải / Mức yêu cầu đề xuất cho MVP |
+|---|---|---|
+| NFR22 | Ghi log đầy đủ các thao tác quan trọng | Đáp ứng RULE-22/BR35 — ghi log thao tác quản trị nhạy cảm, phục vụ tra soát sự cố |
+| NFR23 | Giám sát cơ bản tình trạng hệ thống | Có cơ chế theo dõi cơ bản tình trạng hoạt động của các module chính (đặt xe, thanh toán, thông báo) để phát hiện sớm sự cố, không cần hệ thống giám sát phức tạp ở giai đoạn MVP |
+
+---
+
+##### 10.8. Ghi chú tổng hợp
+
+- Danh sách NFR trên được thiết kế theo tinh thần **"đủ dùng cho MVP trong 7 tuần"**, tránh over-engineering (ví dụ không bắt buộc kiến trúc microservices đầy đủ, không đặt SLA thời gian phản hồi cực thấp như hệ thống lớn).
+- Tuy nhiên, các nguyên tắc mang tính **nền tảng bắt buộc** (cách ly lỗi giữa các module – NFR08, không lưu thông tin thẻ – NFR13, kiến trúc dễ mở rộng – NFR06/NFR16–19) **vẫn phải tuân thủ ngay từ đầu**, vì đây là yêu cầu tường minh của khách hàng trong tài liệu gốc và khó/tốn kém để bổ sung về sau nếu không thiết kế đúng từ đầu.
+- Các chỉ số cụ thể còn để ở dạng đề xuất (ví dụ số người dùng đồng thời NFR05, mức uptime NFR09) — cần **xác nhận lại với khách hàng** dựa trên quy mô thị trường thực tế và ngân sách hạ tầng, nên được đưa vào danh sách Open Questions.
+- NFR sẽ là đầu vào cho đội kỹ thuật lựa chọn **kiến trúc triển khai cụ thể** (ví dụ modular monolith cho MVP, có lộ trình tách microservices sau khi hệ thống tăng trưởng) ở giai đoạn thiết kế giải pháp kỹ thuật (Solution Design), nằm ngoài phạm vi tài liệu phân tích nghiệp vụ của BA.
