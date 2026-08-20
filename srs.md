@@ -734,3 +734,345 @@ Quy ước ký hiệu:
 |---|---|---|
 | RULE-21 | Thao tác nhạy cảm chỉ dành cho nhân viên có quyền quản trị cao hơn | Ví dụ: hoàn tiền, khóa tài khoản, chỉnh sửa dữ liệu giao dịch chỉ admin cấp cao mới thực hiện được |
 | RULE-22 | Mọi thao tác quản trị quan trọng đều phải được ghi log | Không có thao tác quản trị nhạy cảm nào được thực hiện mà không lưu vết
+
+#### Bước 9: Xây dựng Data Model & Sơ đồ ERD
+
+Từ các Business Requirement, Functional Requirement và Business Rules đã xác định (Bước 5–8), tiến hành xác định các **thực thể (Entity)**, **thuộc tính (Attribute)** và **mối quan hệ (Relationship)** giữa chúng để xây dựng **mô hình dữ liệu ở mức khái niệm/logic (Conceptual/Logical Data Model)**, phù hợp cho giai đoạn MVP.
+
+---
+
+##### 9.1. Danh sách thực thể chính (Entities)
+
+| STT | Entity | Mô tả | Nguồn gốc (BR/FR liên quan) |
+|---|---|---|---|
+| 1 | **Account** | Tài khoản chung cho mọi vai trò (khách hàng, tài xế, nhân viên vận hành) | BR01–BR04, FR51–FR58 |
+| 2 | **Customer** | Thông tin mở rộng riêng cho khách hàng | BR05–BR07, FR01–FR08 |
+| 3 | **Driver** | Thông tin mở rộng riêng cho tài xế (trạng thái, vị trí, rating) | BR08–BR10, FR09–FR21 |
+| 4 | **OperatorStaff** | Nhân viên vận hành / quản trị | BR26–BR30, FR59–FR64 |
+| 5 | **Vehicle** | Phương tiện của tài xế | BR08, FR03, FR12 |
+| 6 | **VehicleType** | Loại xe/dịch vụ (4 chỗ, 7 chỗ, xe máy...) kèm cấu hình giá | BR11, FR03, FR33 |
+| 7 | **SavedLocation** | Địa điểm khách hàng lưu sẵn (điểm đón/đến thường dùng) | BR06 |
+| 8 | **Trip** | Chuyến đi — thực thể trung tâm của hệ thống | BR11–BR17, FR01–FR31 |
+| 9 | **DispatchAttempt** | Ghi nhận từng lượt đề xuất chuyến cho một tài xế (phục vụ RULE-05, RULE-06, EX-01/EX-02) | FR15–FR21, RULE-04–07 |
+| 10 | **TripStatusLog** | Nhật ký thay đổi trạng thái chuyến đi | RULE-08, FR22–FR29 |
+| 11 | **Payment** | Thông tin thanh toán của chuyến đi | BR18–BR22, FR32–FR40 |
+| 12 | **Rating** | Đánh giá của khách hàng dành cho tài xế | BR25, FR46–FR50 |
+| 13 | **Notification** | Thông báo gửi cho khách hàng/tài xế | BR23–BR24, FR41–FR45 |
+| 14 | **AuditLog** | Nhật ký ghi vết các thao tác quan trọng (đặc biệt thao tác quản trị) | BR35, RULE-22, FR64 |
+
+---
+
+##### 9.2. Thuộc tính chi tiết từng thực thể
+
+**Account**
+| Thuộc tính | Kiểu dữ liệu | Ghi chú |
+|---|---|---|
+| account_id (PK) | UUID | |
+| full_name | string | |
+| phone_number | string | Duy nhất (RULE-18) |
+| email | string | Duy nhất (RULE-18) |
+| password_hash | string | |
+| role | enum(customer, driver, operator, admin) | |
+| status | enum(active, locked) | Phục vụ EX-17 |
+| created_at | datetime | |
+
+**Customer**
+| Thuộc tính | Kiểu dữ liệu | Ghi chú |
+|---|---|---|
+| customer_id (PK, FK → Account) | UUID | Quan hệ 1-1 với Account |
+| rating_avg | decimal | Điểm trung bình khách hàng nhận từ tài xế (nếu có, mở rộng sau) |
+
+**Driver**
+| Thuộc tính | Kiểu dữ liệu | Ghi chú |
+|---|---|---|
+| driver_id (PK, FK → Account) | UUID | Quan hệ 1-1 với Account |
+| status | enum(online, offline, busy) | RULE-01 |
+| current_lat / current_lng | decimal | FR09, FR23 |
+| rating_avg | decimal | FR50 |
+| license_number | string | |
+
+**Vehicle**
+| Thuộc tính | Kiểu dữ liệu | Ghi chú |
+|---|---|---|
+| vehicle_id (PK) | UUID | |
+| driver_id (FK) | UUID | |
+| vehicle_type_id (FK) | UUID | |
+| plate_number | string | |
+| brand_model | string | |
+| status | enum(active, inactive) | |
+
+**VehicleType**
+| Thuộc tính | Kiểu dữ liệu | Ghi chú |
+|---|---|---|
+| type_id (PK) | UUID | |
+| type_name | string | ví dụ: 4 chỗ, 7 chỗ, xe máy |
+| base_fare | decimal | FR33 |
+| price_per_km | decimal | FR33 |
+| price_per_minute | decimal | FR33 |
+
+**SavedLocation**
+| Thuộc tính | Kiểu dữ liệu | Ghi chú |
+|---|---|---|
+| location_id (PK) | UUID | |
+| customer_id (FK) | UUID | |
+| label | string | ví dụ: Nhà, Công ty |
+| address | string | |
+| lat / lng | decimal | |
+
+**Trip**
+| Thuộc tính | Kiểu dữ liệu | Ghi chú |
+|---|---|---|
+| trip_id (PK) | UUID | |
+| customer_id (FK) | UUID | |
+| driver_id (FK, nullable) | UUID | Chỉ có giá trị sau khi ghép tài xế |
+| vehicle_type_id (FK) | UUID | |
+| pickup_address / pickup_lat / pickup_lng | string/decimal | FR01 |
+| dropoff_address / dropoff_lat / dropoff_lng | string/decimal | FR02 |
+| prefer_high_rating | boolean | FR13 |
+| status | enum(searching, matched, arrived, picked_up, in_progress, completed, cancelled, no_driver_found) | RULE-08 |
+| requested_at / matched_at / started_at / completed_at | datetime | |
+| distance_km / duration_minutes | decimal | FR32 |
+| fare_amount | decimal | FR33 |
+| cancel_reason | string, nullable | RULE-10, EX-09 |
+
+**DispatchAttempt**
+| Thuộc tính | Kiểu dữ liệu | Ghi chú |
+|---|---|---|
+| attempt_id (PK) | UUID | |
+| trip_id (FK) | UUID | |
+| driver_id (FK) | UUID | |
+| proposed_at | datetime | FR15 |
+| responded_at | datetime, nullable | |
+| response | enum(accepted, rejected, timeout) | RULE-05/06, EX-02 |
+
+**TripStatusLog**
+| Thuộc tính | Kiểu dữ liệu | Ghi chú |
+|---|---|---|
+| log_id (PK) | UUID | |
+| trip_id (FK) | UUID | |
+| status | string | |
+| changed_by | enum(customer, driver, system) | |
+| changed_at | datetime | |
+
+**Payment**
+| Thuộc tính | Kiểu dữ liệu | Ghi chú |
+|---|---|---|
+| payment_id (PK) | UUID | |
+| trip_id (FK, unique) | UUID | Quan hệ 1-1 với Trip |
+| amount | decimal | |
+| method | enum(cash, electronic) | BR19/BR20 |
+| status | enum(pending, success, failed) | RULE-13 |
+| provider_transaction_id | string, nullable | BR21 – không lưu thông tin thẻ, chỉ lưu mã giao dịch |
+| paid_at | datetime, nullable | |
+
+**Rating**
+| Thuộc tính | Kiểu dữ liệu | Ghi chú |
+|---|---|---|
+| rating_id (PK) | UUID | |
+| trip_id (FK, unique) | UUID | RULE-17: mỗi chuyến chỉ đánh giá 1 lần |
+| customer_id (FK) | UUID | |
+| driver_id (FK) | UUID | |
+| stars | integer | FR47 |
+| comment | string, nullable | FR48 |
+| created_at | datetime | |
+
+**Notification**
+| Thuộc tính | Kiểu dữ liệu | Ghi chú |
+|---|---|---|
+| notification_id (PK) | UUID | |
+| account_id (FK) | UUID | Người nhận |
+| trip_id (FK, nullable) | UUID | |
+| type | string | ví dụ: trip_requested, driver_matched, trip_completed, payment_result |
+| content | string | |
+| status | enum(sent, failed) | FR45 |
+| sent_at | datetime | |
+
+**AuditLog**
+| Thuộc tính | Kiểu dữ liệu | Ghi chú |
+|---|---|---|
+| log_id (PK) | UUID | |
+| actor_account_id (FK) | UUID | Người thực hiện thao tác |
+| action | string | |
+| target_entity | string | Tên bảng bị tác động |
+| target_id | UUID | |
+| detail | text, nullable | |
+| timestamp | datetime | |
+
+---
+
+##### 9.3. Sơ đồ ERD (Mermaid — GitHub tự động render)
+
+````markdown
+```mermaid
+erDiagram
+    ACCOUNT ||--o| CUSTOMER : "is a"
+    ACCOUNT ||--o| DRIVER : "is a"
+    ACCOUNT ||--o| OPERATOR_STAFF : "is a"
+
+    CUSTOMER ||--o{ SAVED_LOCATION : "has"
+    CUSTOMER ||--o{ TRIP : "requests"
+
+    DRIVER ||--o{ VEHICLE : "drives"
+    DRIVER ||--o{ TRIP : "serves"
+    DRIVER ||--o{ DISPATCH_ATTEMPT : "receives"
+
+    VEHICLE_TYPE ||--o{ VEHICLE : "categorizes"
+    VEHICLE_TYPE ||--o{ TRIP : "selected as"
+
+    TRIP ||--o{ DISPATCH_ATTEMPT : "has"
+    TRIP ||--o{ TRIP_STATUS_LOG : "has"
+    TRIP ||--o| PAYMENT : "has"
+    TRIP ||--o| RATING : "has"
+    TRIP ||--o{ NOTIFICATION : "triggers"
+
+    ACCOUNT ||--o{ NOTIFICATION : "receives"
+    ACCOUNT ||--o{ AUDIT_LOG : "performs"
+
+    ACCOUNT {
+        string account_id PK
+        string full_name
+        string phone_number
+        string email
+        string password_hash
+        string role
+        string status
+        datetime created_at
+    }
+
+    CUSTOMER {
+        string customer_id PK_FK
+        decimal rating_avg
+    }
+
+    DRIVER {
+        string driver_id PK_FK
+        string status
+        decimal current_lat
+        decimal current_lng
+        decimal rating_avg
+        string license_number
+    }
+
+    OPERATOR_STAFF {
+        string staff_id PK_FK
+        string admin_level
+    }
+
+    VEHICLE {
+        string vehicle_id PK
+        string driver_id FK
+        string vehicle_type_id FK
+        string plate_number
+        string brand_model
+        string status
+    }
+
+    VEHICLE_TYPE {
+        string type_id PK
+        string type_name
+        decimal base_fare
+        decimal price_per_km
+        decimal price_per_minute
+    }
+
+    SAVED_LOCATION {
+        string location_id PK
+        string customer_id FK
+        string label
+        string address
+        decimal lat
+        decimal lng
+    }
+
+    TRIP {
+        string trip_id PK
+        string customer_id FK
+        string driver_id FK
+        string vehicle_type_id FK
+        string pickup_address
+        decimal pickup_lat
+        decimal pickup_lng
+        string dropoff_address
+        decimal dropoff_lat
+        decimal dropoff_lng
+        boolean prefer_high_rating
+        string status
+        datetime requested_at
+        datetime matched_at
+        datetime started_at
+        datetime completed_at
+        decimal distance_km
+        decimal duration_minutes
+        decimal fare_amount
+        string cancel_reason
+    }
+
+    DISPATCH_ATTEMPT {
+        string attempt_id PK
+        string trip_id FK
+        string driver_id FK
+        datetime proposed_at
+        datetime responded_at
+        string response
+    }
+
+    TRIP_STATUS_LOG {
+        string log_id PK
+        string trip_id FK
+        string status
+        string changed_by
+        datetime changed_at
+    }
+
+    PAYMENT {
+        string payment_id PK
+        string trip_id FK
+        decimal amount
+        string method
+        string status
+        string provider_transaction_id
+        datetime paid_at
+    }
+
+    RATING {
+        string rating_id PK
+        string trip_id FK
+        string customer_id FK
+        string driver_id FK
+        int stars
+        string comment
+        datetime created_at
+    }
+
+    NOTIFICATION {
+        string notification_id PK
+        string account_id FK
+        string trip_id FK
+        string type
+        string content
+        string status
+        datetime sent_at
+    }
+
+    AUDIT_LOG {
+        string log_id PK
+        string actor_account_id FK
+        string action
+        string target_entity
+        string target_id
+        string detail
+        datetime timestamp
+    }
+```
+````
+
+---
+
+##### 9.4. Ghi chú thiết kế
+
+- **Account** đóng vai trò bảng gốc, dùng chung xác thực cho cả 3 vai trò; **Customer / Driver / OperatorStaff** là bảng mở rộng theo quan hệ 1-1, giúp tách biệt dữ liệu đặc thù từng vai trò mà vẫn tránh trùng lặp thông tin đăng nhập (đúng theo RULE-18 → RULE-20).
+- **DispatchAttempt** là thực thể quan trọng để hiện thực hóa toàn bộ logic ở BP02 (RULE-04 → RULE-07, EX-01, EX-02): mỗi lần hệ thống đề xuất chuyến cho một tài xế đều được ghi lại, làm cơ sở xử lý timeout/từ chối và chuyển sang tài xế kế tiếp mà không cần tạo lại Trip mới.
+- **TripStatusLog** tách riêng khỏi Trip để lưu lại toàn bộ lịch sử thay đổi trạng thái (phục vụ RULE-08, đối soát khi có khiếu nại, và một phần cho AuditLog).
+- **Payment.provider_transaction_id** chỉ lưu mã tham chiếu giao dịch, **không lưu thông tin thẻ/tài khoản thanh toán** — đúng theo RULE-12/BR21.
+- Quan hệ **Trip – Payment** và **Trip – Rating** là 1-1 (mỗi chuyến chỉ có một bản ghi thanh toán và một đánh giá), đúng theo RULE-13 và RULE-17.
+- Mô hình hiện ở mức MVP, **chưa bao gồm** các bảng cho: khuyến mãi/mã giảm giá, đa nhà cung cấp thanh toán, đa kênh thông báo, lịch sử vị trí tài xế theo dòng thời gian chi tiết (location tracking history) — các phần này thuộc nhóm "Ngoài phạm vi" đã xác định ở Bước 4, có thể bổ sung sau mà không phá vỡ cấu trúc hiện tại (đáp ứng BG08/BR37 về kiến trúc mở rộng).
