@@ -902,7 +902,6 @@ Từ các Business Requirement, Functional Requirement và Business Rules đã x
 
 ##### 9.3. Sơ đồ ERD (Mermaid — GitHub tự động render)
 
-````markdown
 ```mermaid
 erDiagram
     ACCOUNT ||--o| CUSTOMER : "is a"
@@ -1064,7 +1063,7 @@ erDiagram
         datetime timestamp
     }
 ```
-````
+
 
 ---
 
