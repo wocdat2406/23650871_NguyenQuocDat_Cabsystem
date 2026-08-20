@@ -206,3 +206,44 @@ Với thời gian triển khai chỉ **7 tuần**, BA cần xác định rõ ph�
 - Tính năng phân tích nâng cao / AI dự đoán nhu cầu, tối ưu tuyến đường
 
 .....
+
+#### Bước 5: Chuyển đổi Yêu cầu thành Business Requirements (BR)
+
+Sau khi hoàn thành Bước 4 (xác định phạm vi và module), BA cần **gặp lại khách hàng để xác nhận phạm vi (scope confirmation)**. Sau khi khách hàng xác nhận đúng các yêu cầu, BA tiến hành chuyển các yêu cầu trong phạm vi (in-scope) thành các **Business Requirement (BR)** — là các yêu cầu nghiệp vụ cụ thể, làm cơ sở để thiết kế Use Case, chức năng và giải pháp kỹ thuật ở các bước sau.
+
+---
+
+##### Danh sách Business Requirements (BR)
+
+| Mã | Tên Business Requirement | Diễn giải |
+|---|---|---|
+| BR01 | Đặt chuyến | Khách hàng nhập điểm đón, điểm đến, chọn loại xe và gửi yêu cầu đặt xe đến hệ thống |
+| BR02 | Đăng ký & đăng nhập tài khoản | Khách hàng, tài xế có thể đăng ký tài khoản mới hoặc đăng nhập vào hệ thống để sử dụng các chức năng yêu cầu xác thực |
+| BR03 | Cập nhật thông tin cá nhân | Khách hàng và tài xế có thể cập nhật thông tin hồ sơ cá nhân của mình sau khi đăng nhập |
+| BR04 | Quản lý hồ sơ & phương tiện tài xế | Tài xế cập nhật thông tin phương tiện (loại xe, biển số...) và trạng thái hoạt động của bản thân |
+| BR05 | Tìm và đề xuất tài xế phù hợp | Hệ thống tự động xác định tài xế phù hợp gần khách hàng dựa trên vị trí và trạng thái sẵn sàng |
+| BR06 | Xử lý khi tài xế từ chối/không phản hồi | Hệ thống tự động chuyển sang tìm tài xế khác khi tài xế được đề xuất từ chối hoặc không phản hồi, không yêu cầu khách hàng đặt lại |
+| BR07 | Thông báo không tìm được tài xế | Hệ thống thông báo rõ ràng cho khách hàng khi không tìm được tài xế phù hợp |
+| BR08 | Theo dõi trạng thái chuyến đi | Khách hàng theo dõi được trạng thái chuyến theo thời gian thực: đang tìm tài xế, đã nhận chuyến, đến điểm đón, đang di chuyển, hoàn thành |
+| BR09 | Cập nhật trạng thái chuyến (phía tài xế) | Tài xế cập nhật các mốc trạng thái trong quá trình thực hiện chuyến: đã đến điểm đón, đã đón khách, đang di chuyển, hoàn thành |
+| BR10 | Tính cước chuyến đi | Hệ thống tự động tính số tiền khách hàng phải trả dựa trên loại dịch vụ và thông tin chuyến đi sau khi hoàn thành |
+| BR11 | Thanh toán tiền mặt | Khách hàng có thể chọn hình thức thanh toán bằng tiền mặt sau khi hoàn thành chuyến |
+| BR12 | Thanh toán điện tử | Khách hàng có thể thanh toán qua cổng thanh toán điện tử tích hợp với nhà cung cấp bên ngoài |
+| BR13 | Xử lý giao dịch thanh toán thất bại | Hệ thống thông báo cho khách hàng và cho phép xử lý lại khi giao dịch thanh toán điện tử không thành công |
+| BR14 | Thông báo theo vòng đời chuyến đi | Hệ thống gửi thông báo cho khách hàng và tài xế tại các mốc: tiếp nhận yêu cầu, tài xế nhận chuyến, tài xế đến điểm đón, hoàn thành chuyến, kết quả thanh toán |
+| BR15 | Xem lịch sử chuyến đi | Khách hàng xem lại danh sách các chuyến đã thực hiện kèm chi tiết và số tiền đã thanh toán |
+| BR16 | Đánh giá tài xế | Khách hàng đánh giá tài xế sau khi hoàn thành chuyến đi |
+| BR17 | Quản lý khách hàng, tài xế, phương tiện, chuyến đi (Admin) | Nhân viên vận hành có thể xem, tra cứu và quản lý dữ liệu khách hàng, tài xế, phương tiện và chuyến đi trên giao diện quản trị |
+| BR18 | Hỗ trợ xử lý chuyến gặp sự cố | Nhân viên vận hành xem các chuyến đang diễn ra và hỗ trợ xử lý khi chuyến gặp lỗi/sự cố |
+| BR19 | Phân quyền thao tác quản trị | Hệ thống giới hạn một số chức năng quản trị nhạy cảm, chỉ cho phép người có quyền phù hợp thực hiện |
+| BR20 | Báo cáo vận hành | Hệ thống cung cấp báo cáo về số lượng chuyến, doanh thu, tỷ lệ hoàn thành/hủy chuyến và hiệu quả hoạt động của tài xế |
+| BR21 | Xác thực người dùng | Hệ thống yêu cầu xác thực khách hàng/tài xế trước khi cho phép sử dụng các chức năng gắn với tài khoản |
+| BR22 | Ghi log thao tác quan trọng | Hệ thống ghi lại (audit log) các thao tác quan trọng, đặc biệt là thao tác quản trị, phục vụ tra soát khi có sự cố |
+
+---
+
+##### Ghi chú
+
+- Bảng BR trên được xây dựng **dựa trên các module trong phạm vi (in-scope)** đã xác nhận ở Bước 4; các nội dung thuộc mục **"Ngoài phạm vi"** ở Bước 4 **không** được chuyển thành BR ở giai đoạn này.
+- Mỗi BR sẽ là đầu vào để triển khai tiếp ở **Bước 6: xác định Actor và Use Case**, trong đó một BR có thể tương ứng với một hoặc nhiều Use Case cụ thể.
+- Trước khi chốt danh sách BR chính thức, BA nên tổ chức buổi **review với khách hàng** để xác nhận: (1) tên gọi và nội dung từng BR có đúng ý khách hàng; (2) không thiếu/thừa BR so với phạm vi đã thống nhất.
