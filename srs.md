@@ -1739,3 +1739,265 @@ Một số tiêu chí chưa thể xác định giá trị cụ thể do khách h
 | Thời gian lưu trữ dữ liệu và Audit Log | AC149–AC154, AC173 |
 
 > Các AC trên chỉ được xem là **chốt chính thức** sau khi những giá trị còn thiếu được BA xác nhận với khách hàng.
+# Bước 14: Truy xuất nguồn gốc yêu cầu (Requirement Traceability Matrix – RTM)
+
+Requirement Traceability Matrix (RTM) là bảng dùng để **theo dõi và truy xuất mối liên hệ giữa các yêu cầu trong toàn bộ quá trình phát triển hệ thống**, từ mục tiêu nghiệp vụ ban đầu cho đến kiểm thử.
+
+RTM giúp:
+
+* BA theo dõi yêu cầu bắt đầu từ Business Goal nào.
+* Xác định Business Requirement nào hỗ trợ Business Goal.
+* Theo dõi Business Requirement được triển khai thành Functional Requirement nào.
+* Xác định Functional Requirement được thể hiện trong Use Case nào.
+* Liên kết Use Case với Acceptance Criteria.
+* Tester xác định Test Case dùng để kiểm tra từng yêu cầu.
+* Phát hiện các yêu cầu bị thiếu, chưa được thiết kế hoặc chưa được kiểm thử.
+
+**Quy ước ký hiệu:**
+
+* `BGxx`: Business Goal.
+* `BRxx`: Business Requirement.
+* `FRxx`: Functional Requirement.
+* `UCxx`: Use Case.
+* `ACxx`: Acceptance Criteria.
+* `TCxx`: Test Case.
+
+Luồng truy xuất yêu cầu:
+
+```text
+BG → BR → FR → UC → AC → TC
+```
+
+---
+
+## 14.1. Requirement Traceability Matrix
+
+| BG         | BR   | FR                    | UC                           | AC                                 | TC          |
+| ---------- | ---- | --------------------- | ---------------------------- | ---------------------------------- | ----------- |
+| BG01       | BR01 | FR01–FR08             | UC05                         | AC20–AC29                          | TC01–TC10   |
+| BG07       | BR02 | FR51–FR58             | UC01, UC02, UC12, UC13       | AC01–AC10, AC65–AC71               | TC11–TC20   |
+| BG07       | BR03 | FR51–FR54             | UC03, UC14                   | AC11–AC15, AC72–AC75               | TC21–TC29   |
+| BG01       | BR04 | FR55, FR58            | UC14, UC15                   | AC72–AC78                          | TC30–TC36   |
+| BG01       | BR05 | FR09–FR17             | UC16, UC28                   | AC79–AC84, AC128–AC133             | TC37–TC48   |
+| BG01       | BR06 | FR16, FR18–FR20       | UC17, UC28                   | AC82–AC87, AC133–AC135             | TC49–TC55   |
+| BG01, BG04 | BR07 | FR20–FR21             | UC05, UC28, UC30             | AC29, AC136, AC143–AC148           | TC56–TC57   |
+| BG03       | BR08 | FR22–FR24, FR28       | UC06                         | AC30–AC35                          | TC58–TC63   |
+| BG03       | BR09 | FR25–FR29             | UC18                         | AC88–AC94                          | TC64–TC70   |
+| BG02       | BR10 | FR32–FR34             | UC29                         | AC138–AC142                        | TC71–TC75   |
+| BG02       | BR11 | FR35–FR36, FR40       | UC09, UC19                   | AC45–AC48, AC95–AC98               | TC76–TC83   |
+| BG02       | BR12 | FR35, FR37–FR38, FR40 | UC09, UC32                   | AC45–AC51, AC155–AC157             | TC84–TC94   |
+| BG02       | BR13 | FR38–FR39             | UC09, UC32                   | AC52, AC158–AC161                  | TC95–TC99   |
+| BG04       | BR14 | FR41–FR45             | UC11, UC20, UC30             | AC59–AC64, AC99–AC101, AC143–AC148 | TC100–TC114 |
+| BG03       | BR15 | FR22–FR29             | UC08                         | AC41–AC44                          | TC115–TC118 |
+| BG09       | BR16 | FR46–FR50             | UC10                         | AC53–AC58                          | TC119–TC124 |
+| BG05       | BR17 | FR59–FR61             | UC22, UC23, UC24             | AC105–AC114                        | TC125–TC134 |
+| BG05       | BR18 | FR60–FR62             | UC25                         | AC115–AC118                        | TC135–TC141 |
+| BG05, BG07 | BR19 | FR58, FR63            | UC21, UC27                   | AC102–AC104, AC122–AC127           | TC142–TC148 |
+| BG05       | BR20 | FR65–FR69             | UC26                         | AC119–AC121                        | TC149–TC154 |
+| BG07       | BR21 | FR51–FR58             | UC01, UC02, UC12, UC13, UC21 | AC01–AC10, AC65–AC71, AC102–AC104  | TC155–TC166 |
+| BG07       | BR22 | FR64                  | UC31                         | AC149–AC154                        | TC167–TC174 |
+
+---
+
+## 14.2. Nhóm Test Case – Đăng ký tài khoản
+
+| Mã TC | Test Case                                                                 |
+| ----- | ------------------------------------------------------------------------- |
+| TC11  | Kiểm tra khách hàng nhập đầy đủ thông tin bắt buộc và đăng ký thành công. |
+| TC12  | Kiểm tra hệ thống từ chối khi thiếu thông tin bắt buộc.                   |
+| TC13  | Kiểm tra hệ thống phát hiện số điện thoại/email không hợp lệ.             |
+| TC14  | Kiểm tra hệ thống không cho phép đăng ký số điện thoại/email đã tồn tại.  |
+| TC15  | Kiểm tra hệ thống gửi OTP/mã xác thực sau khi thông tin hợp lệ.           |
+| TC16  | Kiểm tra tạo tài khoản khi OTP chính xác.                                 |
+| TC17  | Kiểm tra hệ thống không tạo tài khoản khi OTP sai.                        |
+| TC18  | Kiểm tra hệ thống không tạo tài khoản khi OTP hết hạn.                    |
+
+---
+
+## 14.3. Nhóm Test Case – Đăng nhập
+
+| Mã TC | Test Case                                                                   |
+| ----- | --------------------------------------------------------------------------- |
+| TC19  | Kiểm tra đăng nhập thành công với tài khoản và mật khẩu chính xác.          |
+| TC20  | Kiểm tra đăng nhập thất bại khi mật khẩu sai.                               |
+| TC21  | Kiểm tra đăng nhập thất bại khi tài khoản không tồn tại.                    |
+| TC22  | Kiểm tra hệ thống cấp đúng quyền theo vai trò sau khi đăng nhập thành công. |
+| TC23  | Kiểm tra tài khoản bị khóa tạm khi đăng nhập sai vượt số lần cho phép.      |
+
+---
+
+## 14.4. Nhóm Test Case – Đặt chuyến
+
+| Mã TC | Test Case                                                     |
+| ----- | ------------------------------------------------------------- |
+| TC24  | Kiểm tra khách hàng nhập điểm đón hợp lệ.                     |
+| TC25  | Kiểm tra khách hàng nhập điểm đến hợp lệ.                     |
+| TC26  | Kiểm tra khách hàng chọn loại xe.                             |
+| TC27  | Kiểm tra hệ thống từ chối yêu cầu nếu điểm đón không hợp lệ.  |
+| TC28  | Kiểm tra hệ thống từ chối yêu cầu nếu điểm đến không hợp lệ.  |
+| TC29  | Kiểm tra hệ thống tạo yêu cầu đặt chuyến thành công.          |
+| TC30  | Kiểm tra chuyến chuyển sang trạng thái đang tìm tài xế.       |
+| TC31  | Kiểm tra hệ thống tự động kích hoạt quá trình tìm tài xế.     |
+| TC32  | Kiểm tra khách hàng nhận thông báo yêu cầu đã được tiếp nhận. |
+
+---
+
+## 14.5. Nhóm Test Case – Tìm và điều phối tài xế
+
+| Mã TC | Test Case                                                                        |
+| ----- | -------------------------------------------------------------------------------- |
+| TC33  | Kiểm tra hệ thống chỉ chọn tài xế đang ở trạng thái sẵn sàng.                    |
+| TC34  | Kiểm tra hệ thống loại tài xế đang bận hoặc ngoại tuyến.                         |
+| TC35  | Kiểm tra hệ thống lọc tài xế đúng loại phương tiện khách hàng yêu cầu.           |
+| TC36  | Kiểm tra hệ thống tìm tài xế trong khu vực phù hợp.                              |
+| TC37  | Kiểm tra hệ thống sắp xếp tài xế theo tiêu chí ưu tiên.                          |
+| TC38  | Kiểm tra đề xuất chuyến được gửi đến tài xế phù hợp.                             |
+| TC39  | Kiểm tra tài xế có thể chấp nhận chuyến.                                         |
+| TC40  | Kiểm tra chuyến được gán cho tài xế sau khi chấp nhận.                           |
+| TC41  | Kiểm tra tài xế có thể từ chối chuyến.                                           |
+| TC42  | Kiểm tra hệ thống tự động chuyển sang tài xế tiếp theo khi tài xế từ chối.       |
+| TC43  | Kiểm tra hệ thống xử lý khi tài xế không phản hồi trong thời gian quy định.      |
+| TC44  | Kiểm tra khách hàng không cần tạo lại yêu cầu khi tài xế từ chối.                |
+| TC45  | Kiểm tra chỉ một tài xế được nhận một chuyến khi nhiều tài xế phản hồi cùng lúc. |
+| TC46  | Kiểm tra thông báo khách hàng khi không tìm được tài xế phù hợp.                 |
+
+---
+
+## 14.6. Nhóm Test Case – Theo dõi và thực hiện chuyến
+
+| Mã TC | Test Case                                                          |
+| ----- | ------------------------------------------------------------------ |
+| TC47  | Kiểm tra khách hàng xem được thông tin tài xế sau khi ghép chuyến. |
+| TC48  | Kiểm tra khách hàng xem được trạng thái hiện tại của chuyến.       |
+| TC49  | Kiểm tra vị trí tài xế được cập nhật trong quá trình di chuyển.    |
+| TC50  | Kiểm tra hệ thống hiển thị ETA của tài xế.                         |
+| TC51  | Kiểm tra tài xế cập nhật trạng thái đã đến điểm đón.               |
+| TC52  | Kiểm tra tài xế cập nhật trạng thái đã đón khách.                  |
+| TC53  | Kiểm tra tài xế cập nhật trạng thái đang di chuyển.                |
+| TC54  | Kiểm tra tài xế cập nhật trạng thái hoàn thành chuyến.             |
+| TC55  | Kiểm tra hệ thống không cho phép cập nhật trạng thái sai thứ tự.   |
+| TC56  | Kiểm tra dữ liệu được đồng bộ lại sau khi mất kết nối.             |
+
+---
+
+## 14.7. Nhóm Test Case – Thanh toán
+
+| Mã TC | Test Case                                                             |
+| ----- | --------------------------------------------------------------------- |
+| TC57  | Kiểm tra hệ thống tính cước sau khi chuyến hoàn thành.                |
+| TC58  | Kiểm tra cước được tính theo đúng loại dịch vụ.                       |
+| TC59  | Kiểm tra hệ thống hiển thị số tiền cần thanh toán.                    |
+| TC60  | Kiểm tra khách hàng chọn thanh toán tiền mặt.                         |
+| TC61  | Kiểm tra tài xế xác nhận đã nhận tiền mặt.                            |
+| TC62  | Kiểm tra hệ thống cập nhật trạng thái thanh toán tiền mặt thành công. |
+| TC63  | Kiểm tra khách hàng chọn thanh toán điện tử.                          |
+| TC64  | Kiểm tra hệ thống gửi yêu cầu đến Payment Gateway.                    |
+| TC65  | Kiểm tra CAB không lưu thông tin thẻ/tài khoản nhạy cảm.              |
+| TC66  | Kiểm tra giao dịch điện tử thành công.                                |
+| TC67  | Kiểm tra giao dịch điện tử thất bại.                                  |
+| TC68  | Kiểm tra hệ thống thông báo khi thanh toán thất bại.                  |
+| TC69  | Kiểm tra hệ thống cho phép thử lại thanh toán theo chính sách.        |
+| TC70  | Kiểm tra xử lý khi Payment Gateway không phản hồi.                    |
+
+---
+
+## 14.8. Nhóm Test Case – Thông báo
+
+| Mã TC | Test Case                                                        |
+| ----- | ---------------------------------------------------------------- |
+| TC71  | Kiểm tra thông báo khi yêu cầu đặt xe được tiếp nhận.            |
+| TC72  | Kiểm tra thông báo khi tài xế chấp nhận chuyến.                  |
+| TC73  | Kiểm tra thông báo khi tài xế đến điểm đón.                      |
+| TC74  | Kiểm tra thông báo khi chuyến hoàn thành.                        |
+| TC75  | Kiểm tra thông báo kết quả thanh toán.                           |
+| TC76  | Kiểm tra tài xế nhận được thông báo chuyến mới.                  |
+| TC77  | Kiểm tra hệ thống gửi đúng thông báo cho đúng người nhận.        |
+| TC78  | Kiểm tra lỗi gửi thông báo không làm gián đoạn luồng đặt chuyến. |
+| TC79  | Kiểm tra lỗi gửi thông báo không làm gián đoạn thanh toán.       |
+| TC80  | Kiểm tra hệ thống ghi nhận trạng thái gửi thông báo.             |
+
+---
+
+## 14.9. Nhóm Test Case – Đánh giá tài xế
+
+| Mã TC | Test Case                                                             |
+| ----- | --------------------------------------------------------------------- |
+| TC81  | Kiểm tra màn hình đánh giá xuất hiện sau khi chuyến hoàn tất.         |
+| TC82  | Kiểm tra khách hàng có thể chọn số sao đánh giá.                      |
+| TC83  | Kiểm tra khách hàng có thể nhập hoặc bỏ qua nhận xét.                 |
+| TC84  | Kiểm tra đánh giá được lưu đúng chuyến và đúng tài xế.                |
+| TC85  | Kiểm tra khách hàng không thể gửi nhiều đánh giá cho cùng một chuyến. |
+| TC86  | Kiểm tra điểm đánh giá trung bình của tài xế được cập nhật.           |
+
+---
+
+## 14.10. Nhóm Test Case – Quản trị hệ thống
+
+| Mã TC | Test Case                                                             |
+| ----- | --------------------------------------------------------------------- |
+| TC87  | Kiểm tra nhân viên vận hành đăng nhập thành công.                     |
+| TC88  | Kiểm tra nhân viên xem được danh sách chuyến đang diễn ra.            |
+| TC89  | Kiểm tra tìm kiếm khách hàng.                                         |
+| TC90  | Kiểm tra tìm kiếm tài xế.                                             |
+| TC91  | Kiểm tra tìm kiếm chuyến đi.                                          |
+| TC92  | Kiểm tra xem chi tiết chuyến đi.                                      |
+| TC93  | Kiểm tra nhân viên có thể xử lý chuyến gặp sự cố.                     |
+| TC94  | Kiểm tra người không đủ quyền không được thực hiện thao tác nhạy cảm. |
+| TC95  | Kiểm tra hệ thống ghi log thao tác quản trị.                          |
+
+---
+
+## 14.11. Nhóm Test Case – Báo cáo
+
+| Mã TC | Test Case                                              |
+| ----- | ------------------------------------------------------ |
+| TC96  | Kiểm tra chọn loại báo cáo.                            |
+| TC97  | Kiểm tra chọn khoảng thời gian thống kê.               |
+| TC98  | Kiểm tra báo cáo số lượng chuyến.                      |
+| TC99  | Kiểm tra báo cáo doanh thu.                            |
+| TC100 | Kiểm tra báo cáo tỷ lệ hoàn thành/hủy chuyến.          |
+| TC101 | Kiểm tra báo cáo hiệu quả hoạt động tài xế.            |
+| TC102 | Kiểm tra trường hợp khoảng thời gian không có dữ liệu. |
+
+---
+
+## 14.12. Nhóm Test Case – Bảo mật và Audit Log
+
+| Mã TC | Test Case                                                                        |
+| ----- | -------------------------------------------------------------------------------- |
+| TC103 | Kiểm tra người dùng phải xác thực trước khi sử dụng chức năng yêu cầu đăng nhập. |
+| TC104 | Kiểm tra Customer không truy cập được chức năng Driver.                          |
+| TC105 | Kiểm tra Driver không truy cập được chức năng Operator Staff.                    |
+| TC106 | Kiểm tra nhân viên không đủ quyền bị từ chối thao tác nhạy cảm.                  |
+| TC107 | Kiểm tra hệ thống ghi người thực hiện thao tác.                                  |
+| TC108 | Kiểm tra hệ thống ghi thời gian thao tác.                                        |
+| TC109 | Kiểm tra hệ thống ghi nội dung thao tác.                                         |
+| TC110 | Kiểm tra Audit Log được lưu thành công.                                          |
+
+---
+
+## 14.13. Kết luận truy xuất
+
+Thông qua RTM, mỗi yêu cầu của hệ thống CAB có thể được truy xuất theo chuỗi:
+
+```text
+BG → BR → FR → UC → AC → TC
+```
+
+Ví dụ:
+
+```text
+BG01 – Tự động tìm và phân công tài xế
+        ↓
+BR05 – Tìm và đề xuất tài xế phù hợp
+        ↓
+FR09–FR17 – Các chức năng tìm và lọc tài xế
+        ↓
+UC28 – Tìm & điều phối tài xế
+        ↓
+AC128–AC133 – Tiêu chí chấp nhận
+        ↓
+TC33–TC38 – Test Case kiểm thử
+```
+
+Nhờ đó BA có thể kiểm tra được một yêu cầu đã được **phân tích, thiết kế và kiểm thử đầy đủ hay chưa**, đồng thời dễ dàng truy ngược nguyên nhân khi có thay đổi yêu cầu.
