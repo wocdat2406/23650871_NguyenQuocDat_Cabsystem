@@ -1342,3 +1342,400 @@ flowchart LR
 - Từng phần diagram + bảng đặc tả được trình bày **liên tục theo actor** để dễ đối chiếu và copy riêng từng khối khi cần.
 - Quan hệ `<<include>>` thể hiện các use case luôn kéo theo use case khác (ví dụ UC05 luôn gọi UC28 và UC30).
 - Đây là bảng đặc tả ở **mức tóm tắt**; có thể mở rộng chi tiết từng bước (main flow đánh số, precondition/postcondition tách riêng, giao diện liên quan) cho các UC trọng điểm (UC05, UC28, UC09) trước khi bàn giao đội phát triển.
+# Bước 13: Xác định Acceptance Criteria (Tiêu chí chấp nhận)
+
+Acceptance Criteria (AC) là tập hợp các **điều kiện và quy tắc cụ thể mà một chức năng phải đáp ứng** để được xem là hoàn thành và có thể nghiệm thu.
+
+Acceptance Criteria giúp:
+
+- BA xác định rõ yêu cầu cần đạt.
+- Developer biết khi nào chức năng được xem là hoàn thành.
+- Tester có cơ sở xây dựng Test Case.
+- Khách hàng có cơ sở kiểm tra và nghiệm thu sản phẩm.
+
+**Quy ước ký hiệu:**
+- `ACxx`: Acceptance Criteria.
+- Mỗi AC phải có điều kiện kiểm tra rõ ràng và có thể xác minh được.
+
+---
+
+## 13.1. Nhóm Customer
+
+### UC01 – Đăng ký tài khoản
+
+| Mã AC | Tiêu chí chấp nhận |
+|---|---|
+| AC01 | Khách hàng phải nhập đầy đủ các thông tin bắt buộc trước khi gửi yêu cầu đăng ký. |
+| AC02 | Hệ thống phải kiểm tra tính hợp lệ của số điện thoại/email trước khi tạo tài khoản. |
+| AC03 | Hệ thống không cho phép đăng ký nếu số điện thoại/email đã tồn tại. |
+| AC04 | Hệ thống phải gửi OTP hoặc mã xác thực đến thông tin liên hệ đã đăng ký. |
+| AC05 | Chỉ khi xác thực thành công, hệ thống mới tạo tài khoản khách hàng. |
+| AC06 | Nếu OTP không hợp lệ hoặc hết hạn, hệ thống phải thông báo lỗi và không tạo tài khoản. |
+
+### UC02 – Đăng nhập
+
+| Mã AC | Tiêu chí chấp nhận |
+|---|---|
+| AC07 | Khách hàng có tài khoản hợp lệ phải đăng nhập được bằng thông tin đăng nhập chính xác. |
+| AC08 | Nếu thông tin đăng nhập sai, hệ thống phải từ chối truy cập và thông báo lỗi. |
+| AC09 | Sau khi đăng nhập thành công, khách hàng được phép sử dụng các chức năng đúng với quyền của Customer. |
+| AC10 | Khi số lần đăng nhập sai vượt quá giới hạn được cấu hình, hệ thống phải áp dụng cơ chế khóa tạm theo RULE-18/EX-17. |
+
+### UC03 – Cập nhật thông tin cá nhân
+
+| Mã AC | Tiêu chí chấp nhận |
+|---|---|
+| AC11 | Chỉ khách hàng đã đăng nhập mới được cập nhật thông tin cá nhân. |
+| AC12 | Hệ thống phải hiển thị thông tin hiện tại của khách hàng trước khi chỉnh sửa. |
+| AC13 | Hệ thống phải kiểm tra dữ liệu mới trước khi lưu. |
+| AC14 | Nếu dữ liệu hợp lệ, hệ thống phải lưu và hiển thị thông tin mới. |
+| AC15 | Nếu dữ liệu không hợp lệ, hệ thống phải thông báo lỗi và không cập nhật dữ liệu. |
+
+### UC04 – Quản lý địa điểm đã lưu
+
+| Mã AC | Tiêu chí chấp nhận |
+|---|---|
+| AC16 | Khách hàng đã đăng nhập có thể thêm địa điểm thường dùng. |
+| AC17 | Khách hàng có thể sửa thông tin địa điểm đã lưu của mình. |
+| AC18 | Khách hàng có thể xóa địa điểm đã lưu của mình. |
+| AC19 | Sau khi thêm/sửa/xóa thành công, hệ thống phải cập nhật danh sách địa điểm của khách hàng. |
+
+### UC05 – Đặt chuyến
+
+| Mã AC | Tiêu chí chấp nhận |
+|---|---|
+| AC20 | Khách hàng phải đăng nhập trước khi tạo yêu cầu đặt chuyến. |
+| AC21 | Khách hàng phải nhập hoặc chọn được điểm đón và điểm đến. |
+| AC22 | Khách hàng phải chọn loại xe/dịch vụ trước khi gửi yêu cầu. |
+| AC23 | Hệ thống phải kiểm tra điểm đón và điểm đến hợp lệ trước khi tiếp nhận yêu cầu. |
+| AC24 | Khi khách hàng xác nhận đặt xe, hệ thống phải tạo và lưu yêu cầu chuyến đi. |
+| AC25 | Sau khi tiếp nhận yêu cầu, hệ thống phải chuyển chuyến sang trạng thái "đang tìm tài xế". |
+| AC26 | Hệ thống phải tự động kích hoạt quá trình tìm tài xế phù hợp. |
+| AC27 | Khách hàng phải nhận được thông báo xác nhận yêu cầu đặt xe đã được tiếp nhận. |
+| AC28 | Nếu tài xế được đề xuất từ chối hoặc không phản hồi, hệ thống phải tiếp tục tìm tài xế khác mà không yêu cầu khách hàng đặt lại. |
+| AC29 | Nếu không còn tài xế phù hợp, hệ thống phải thông báo rõ cho khách hàng rằng không tìm được tài xế. |
+
+### UC06 – Theo dõi chuyến đi
+
+| Mã AC | Tiêu chí chấp nhận |
+|---|---|
+| AC30 | Sau khi có tài xế nhận chuyến, khách hàng phải xem được thông tin tài xế và phương tiện. |
+| AC31 | Khách hàng phải xem được trạng thái hiện tại của chuyến đi. |
+| AC32 | Hệ thống phải hiển thị vị trí hiện tại của tài xế trong quá trình thực hiện chuyến. |
+| AC33 | Hệ thống phải hiển thị ETA của tài xế đến điểm đón khi có dữ liệu cần thiết. |
+| AC34 | Khi trạng thái chuyến thay đổi, thông tin hiển thị cho khách hàng phải được cập nhật tương ứng. |
+| AC35 | Nếu khách hàng mất kết nối và kết nối lại, hệ thống phải đồng bộ trạng thái hiện tại của chuyến. |
+
+### UC07 – Hủy chuyến
+
+| Mã AC | Tiêu chí chấp nhận |
+|---|---|
+| AC36 | Khách hàng được phép hủy chuyến trước khi tài xế đến điểm đón. |
+| AC37 | Hệ thống phải yêu cầu khách hàng xác nhận thao tác hủy chuyến. |
+| AC38 | Sau khi hủy thành công, trạng thái chuyến phải được cập nhật thành "đã hủy". |
+| AC39 | Nếu đã có tài xế nhận chuyến, hệ thống phải giải phóng tài xế theo quy trình xử lý tương ứng. |
+| AC40 | Khi chuyến đã đạt trạng thái không cho phép hủy, hệ thống phải từ chối yêu cầu hủy. |
+
+### UC08 – Xem lịch sử chuyến đi
+
+| Mã AC | Tiêu chí chấp nhận |
+|---|---|
+| AC41 | Khách hàng đã đăng nhập phải xem được danh sách các chuyến thuộc tài khoản của mình. |
+| AC42 | Mỗi chuyến phải hiển thị được các thông tin cơ bản như điểm đón, điểm đến, trạng thái và số tiền. |
+| AC43 | Khách hàng phải xem được thông tin chi tiết của một chuyến trong lịch sử. |
+| AC44 | Nếu chưa có chuyến đi, hệ thống phải hiển thị trạng thái không có dữ liệu thay vì báo lỗi. |
+
+### UC09 – Thanh toán chuyến đi
+
+| Mã AC | Tiêu chí chấp nhận |
+|---|---|
+| AC45 | Chỉ chuyến đã hoàn thành mới được thực hiện thanh toán. |
+| AC46 | Hệ thống phải hiển thị số tiền khách hàng cần thanh toán. |
+| AC47 | Khách hàng phải lựa chọn được thanh toán tiền mặt hoặc thanh toán điện tử. |
+| AC48 | Với thanh toán tiền mặt, hệ thống chỉ cập nhật "hoàn tất" sau khi tài xế xác nhận đã nhận tiền. |
+| AC49 | Với thanh toán điện tử, hệ thống phải gửi giao dịch đến Payment Gateway. |
+| AC50 | Hệ thống CAB không được lưu trực tiếp thông tin nhạy cảm của thẻ/tài khoản thanh toán. |
+| AC51 | Nếu Payment Gateway trả kết quả thành công, hệ thống phải cập nhật trạng thái thanh toán thành "hoàn tất". |
+| AC52 | Nếu thanh toán thất bại, hệ thống phải thông báo cho khách hàng và cho phép xử lý lại theo chính sách được cấu hình. |
+
+### UC10 – Đánh giá tài xế
+
+| Mã AC | Tiêu chí chấp nhận |
+|---|---|
+| AC53 | Khách hàng chỉ được đánh giá tài xế sau khi chuyến đi đủ điều kiện đánh giá. |
+| AC54 | Khách hàng phải chọn được mức đánh giá cho tài xế. |
+| AC55 | Khách hàng có thể nhập hoặc bỏ qua phần nhận xét. |
+| AC56 | Khi khách hàng gửi đánh giá hợp lệ, hệ thống phải lưu đánh giá gắn với đúng chuyến và tài xế. |
+| AC57 | Mỗi chuyến chỉ được ghi nhận một đánh giá của khách hàng. |
+| AC58 | Sau khi lưu đánh giá, hệ thống phải cập nhật điểm đánh giá trung bình của tài xế. |
+
+### UC11 – Nhận thông báo
+
+| Mã AC | Tiêu chí chấp nhận |
+|---|---|
+| AC59 | Khách hàng phải nhận được thông báo khi yêu cầu đặt xe được tiếp nhận. |
+| AC60 | Khách hàng phải nhận được thông báo khi có tài xế nhận chuyến. |
+| AC61 | Khách hàng phải nhận được thông báo khi tài xế đến điểm đón. |
+| AC62 | Khách hàng phải nhận được thông báo khi chuyến hoàn thành. |
+| AC63 | Khách hàng phải nhận được thông báo về kết quả thanh toán. |
+| AC64 | Nếu gửi thông báo thất bại, lỗi này không được làm gián đoạn quy trình đặt xe hoặc thanh toán. |
+
+---
+
+## 13.2. Nhóm Driver
+
+### UC12 – Đăng ký/Tạo tài khoản tài xế
+
+| Mã AC | Tiêu chí chấp nhận |
+|---|---|
+| AC65 | Tài xế có thể tự đăng ký tài khoản bằng các thông tin bắt buộc. |
+| AC66 | Nhân viên vận hành có thể tạo tài khoản cho tài xế theo quyền được cấp. |
+| AC67 | Hệ thống phải kiểm tra thông tin tài khoản không bị trùng lặp. |
+| AC68 | Hệ thống chỉ tạo tài khoản khi các thông tin bắt buộc hợp lệ. |
+
+### UC13 – Đăng nhập
+
+| Mã AC | Tiêu chí chấp nhận |
+|---|---|
+| AC69 | Tài xế có tài khoản hợp lệ phải đăng nhập được bằng thông tin chính xác. |
+| AC70 | Nếu thông tin đăng nhập sai, hệ thống phải từ chối truy cập. |
+| AC71 | Sau khi đăng nhập thành công, tài xế chỉ được sử dụng các chức năng thuộc quyền Driver. |
+
+### UC14 – Cập nhật hồ sơ & phương tiện
+
+| Mã AC | Tiêu chí chấp nhận |
+|---|---|
+| AC72 | Tài xế đã đăng nhập có thể cập nhật hồ sơ cá nhân. |
+| AC73 | Tài xế có thể cập nhật thông tin phương tiện của mình. |
+| AC74 | Hệ thống phải kiểm tra dữ liệu hợp lệ trước khi lưu. |
+| AC75 | Sau khi lưu thành công, hệ thống phải hiển thị thông tin mới. |
+
+### UC15 – Cập nhật trạng thái hoạt động
+
+| Mã AC | Tiêu chí chấp nhận |
+|---|---|
+| AC76 | Tài xế có thể chuyển trạng thái hoạt động sang "sẵn sàng" hoặc "không sẵn sàng". |
+| AC77 | Chỉ tài xế ở trạng thái "sẵn sàng" mới được đưa vào danh sách tìm tài xế. |
+| AC78 | Khi trạng thái thay đổi, hệ thống phải cập nhật trạng thái mới của tài xế. |
+
+### UC16 – Nhận đề xuất chuyến
+
+| Mã AC | Tiêu chí chấp nhận |
+|---|---|
+| AC79 | Chỉ tài xế đang sẵn sàng và phù hợp với yêu cầu chuyến mới được nhận đề xuất. |
+| AC80 | Đề xuất chuyến phải cung cấp đủ thông tin cần thiết để tài xế quyết định nhận hoặc từ chối. |
+| AC81 | Hệ thống phải bắt đầu tính thời gian phản hồi khi đề xuất được gửi đến tài xế. |
+
+### UC17 – Chấp nhận/Từ chối chuyến
+
+| Mã AC | Tiêu chí chấp nhận |
+|---|---|
+| AC82 | Tài xế có thể chấp nhận hoặc từ chối đề xuất trong thời gian phản hồi quy định. |
+| AC83 | Khi tài xế chấp nhận hợp lệ, hệ thống phải gán tài xế cho chuyến. |
+| AC84 | Sau khi chuyến được gán thành công, hệ thống phải thông báo cho khách hàng. |
+| AC85 | Khi tài xế từ chối, hệ thống phải tiếp tục tìm tài xế khác. |
+| AC86 | Khi hết thời gian phản hồi, hệ thống phải xử lý như trường hợp tài xế không nhận chuyến. |
+| AC87 | Nếu nhiều tài xế cố nhận cùng một chuyến, hệ thống chỉ được phép ghi nhận một tài xế. |
+
+### UC18 – Cập nhật trạng thái chuyến đi
+
+| Mã AC | Tiêu chí chấp nhận |
+|---|---|
+| AC88 | Chỉ tài xế được gán cho chuyến mới được cập nhật trạng thái của chuyến đó. |
+| AC89 | Tài xế phải cập nhật được trạng thái "đã đến điểm đón". |
+| AC90 | Tài xế phải cập nhật được trạng thái "đã đón khách". |
+| AC91 | Tài xế phải cập nhật được trạng thái "đang di chuyển". |
+| AC92 | Tài xế phải cập nhật được trạng thái "hoàn thành chuyến". |
+| AC93 | Hệ thống không cho phép cập nhật trạng thái sai thứ tự nghiệp vụ. |
+| AC94 | Khi chuyến được cập nhật "hoàn thành", hệ thống phải chuyển sang quy trình tính cước. |
+
+### UC19 – Xác nhận thanh toán tiền mặt
+
+| Mã AC | Tiêu chí chấp nhận |
+|---|---|
+| AC95 | Chức năng xác nhận tiền mặt chỉ xuất hiện đối với chuyến chọn phương thức thanh toán tiền mặt. |
+| AC96 | Tài xế được gán cho chuyến phải có thể xác nhận đã nhận tiền. |
+| AC97 | Sau khi xác nhận thành công, hệ thống phải cập nhật thanh toán thành "hoàn tất". |
+| AC98 | Nếu phát sinh tranh chấp thanh toán, giao dịch không được tự động xác nhận hoàn tất và phải được chuyển sang xử lý vận hành. |
+
+### UC20 – Nhận thông báo
+
+| Mã AC | Tiêu chí chấp nhận |
+|---|---|
+| AC99 | Tài xế phải nhận được thông báo khi có chuyến mới phù hợp. |
+| AC100 | Tài xế phải nhận được thông báo về các thay đổi quan trọng liên quan đến chuyến đang thực hiện. |
+| AC101 | Lỗi gửi thông báo không được làm gián đoạn các quy trình nghiệp vụ chính. |
+
+---
+
+## 13.3. Nhóm Operator Staff
+
+### UC21 – Đăng nhập quản trị
+
+| Mã AC | Tiêu chí chấp nhận |
+|---|---|
+| AC102 | Nhân viên phải được xác thực thành công trước khi truy cập giao diện quản trị. |
+| AC103 | Hệ thống phải xác định đúng vai trò và quyền của nhân viên sau khi đăng nhập. |
+| AC104 | Người dùng không có quyền quản trị phải bị từ chối truy cập giao diện quản trị. |
+
+### UC22 – Quản lý khách hàng
+
+| Mã AC | Tiêu chí chấp nhận |
+|---|---|
+| AC105 | Nhân viên có quyền phải xem và tra cứu được danh sách khách hàng. |
+| AC106 | Hệ thống phải hiển thị đúng thông tin khách hàng được chọn. |
+| AC107 | Các thao tác nhạy cảm đối với tài khoản khách hàng phải được kiểm tra quyền trước khi thực hiện. |
+
+### UC23 – Quản lý tài xế & phương tiện
+
+| Mã AC | Tiêu chí chấp nhận |
+|---|---|
+| AC108 | Nhân viên phải tra cứu được tài xế và phương tiện tương ứng. |
+| AC109 | Nhân viên phải xem được trạng thái hoạt động hiện tại của tài xế. |
+| AC110 | Các thao tác quản trị nhạy cảm đối với tài xế phải được kiểm tra quyền. |
+
+### UC24 – Theo dõi chuyến đang diễn ra
+
+| Mã AC | Tiêu chí chấp nhận |
+|---|---|
+| AC111 | Nhân viên phải xem được danh sách các chuyến đang hoạt động. |
+| AC112 | Mỗi chuyến phải hiển thị trạng thái hiện tại. |
+| AC113 | Nhân viên phải xem được thông tin khách hàng và tài xế liên quan đến chuyến. |
+| AC114 | Khi trạng thái chuyến thay đổi, dữ liệu theo dõi phải được cập nhật. |
+
+### UC25 – Xử lý sự cố chuyến đi
+
+| Mã AC | Tiêu chí chấp nhận |
+|---|---|
+| AC115 | Nhân viên phải tra cứu được đầy đủ thông tin cần thiết của chuyến gặp sự cố. |
+| AC116 | Nhân viên có quyền phù hợp phải thực hiện được các thao tác xử lý được cho phép. |
+| AC117 | Nếu thao tác vượt quyền, hệ thống phải từ chối thực hiện. |
+| AC118 | Mọi thao tác xử lý quan trọng phải được ghi vào Audit Log. |
+
+### UC26 – Tra cứu lịch sử giao dịch
+
+| Mã AC | Tiêu chí chấp nhận |
+|---|---|
+| AC119 | Nhân viên có quyền phải tra cứu được lịch sử chuyến và giao dịch. |
+| AC120 | Hệ thống phải hiển thị trạng thái thanh toán tương ứng với từng giao dịch. |
+| AC121 | Khi không tìm thấy dữ liệu phù hợp, hệ thống phải hiển thị thông báo không có dữ liệu thay vì báo lỗi. |
+
+### UC27 – Xem báo cáo vận hành
+
+| Mã AC | Tiêu chí chấp nhận |
+|---|---|
+| AC122 | Người dùng có quyền phải chọn được khoảng thời gian cần thống kê. |
+| AC123 | Hệ thống phải cung cấp được số lượng chuyến trong khoảng thời gian đã chọn. |
+| AC124 | Hệ thống phải cung cấp được dữ liệu doanh thu. |
+| AC125 | Hệ thống phải cung cấp được tỷ lệ chuyến hoàn thành và hủy. |
+| AC126 | Hệ thống phải cung cấp được dữ liệu phục vụ đánh giá hiệu quả hoạt động tài xế. |
+| AC127 | Nếu khoảng thời gian không có dữ liệu, hệ thống phải thông báo "không có dữ liệu" thay vì báo lỗi. |
+
+---
+
+## 13.4. Nhóm System
+
+### UC28 – Tìm & điều phối tài xế
+
+| Mã AC | Tiêu chí chấp nhận |
+|---|---|
+| AC128 | Hệ thống chỉ tìm các tài xế đang ở trạng thái "sẵn sàng". |
+| AC129 | Hệ thống chỉ chọn tài xế có loại phương tiện phù hợp với yêu cầu chuyến. |
+| AC130 | Hệ thống phải sử dụng vị trí tài xế để xác định các tài xế phù hợp gần điểm đón. |
+| AC131 | Danh sách tài xế phải được sắp xếp theo tiêu chí ưu tiên được cấu hình. |
+| AC132 | Hệ thống phải gửi đề xuất đến tài xế phù hợp theo thứ tự ưu tiên. |
+| AC133 | Nếu tài xế từ chối, hệ thống phải tự động chuyển sang tài xế tiếp theo. |
+| AC134 | Nếu tài xế không phản hồi trong timeout, hệ thống phải tự động chuyển sang tài xế tiếp theo. |
+| AC135 | Khách hàng không phải tạo lại yêu cầu trong quá trình tìm tài xế thay thế. |
+| AC136 | Nếu không còn tài xế phù hợp, hệ thống phải kết thúc quá trình tìm kiếm và thông báo cho khách hàng. |
+| AC137 | Một chuyến chỉ được gán thành công cho một tài xế tại một thời điểm. |
+
+### UC29 – Tính cước chuyến đi
+
+| Mã AC | Tiêu chí chấp nhận |
+|---|---|
+| AC138 | Hệ thống chỉ thực hiện tính cước khi chuyến đã hoàn thành. |
+| AC139 | Hệ thống phải xác định được thông tin chuyến cần thiết cho việc tính cước. |
+| AC140 | Hệ thống phải áp dụng công thức tương ứng với loại dịch vụ của chuyến. |
+| AC141 | Kết quả tính cước phải được lưu gắn với đúng chuyến đi. |
+| AC142 | Số tiền cuối cùng phải được hiển thị cho khách hàng trước khi thanh toán. |
+
+### UC30 – Gửi thông báo
+
+| Mã AC | Tiêu chí chấp nhận |
+|---|---|
+| AC143 | Hệ thống phải xác định đúng người nhận theo từng loại sự kiện. |
+| AC144 | Nội dung thông báo phải tương ứng với sự kiện phát sinh. |
+| AC145 | Hệ thống phải ghi nhận trạng thái gửi thông báo thành công hoặc thất bại. |
+| AC146 | Nếu gửi thất bại, hệ thống phải ghi log lỗi. |
+| AC147 | Lỗi của module thông báo không được làm dừng quy trình đặt xe, chuyến đi hoặc thanh toán. |
+| AC148 | Thiết kế module thông báo phải cho phép bổ sung nhà cung cấp/kênh thông báo trong tương lai mà không phải thay đổi toàn bộ hệ thống. |
+
+### UC31 – Ghi log thao tác quan trọng
+
+| Mã AC | Tiêu chí chấp nhận |
+|---|---|
+| AC149 | Các thao tác quản trị quan trọng phải tạo Audit Log. |
+| AC150 | Audit Log phải xác định được người thực hiện thao tác. |
+| AC151 | Audit Log phải ghi nhận loại hành động được thực hiện. |
+| AC152 | Audit Log phải ghi nhận đối tượng bị tác động. |
+| AC153 | Audit Log phải ghi nhận thời gian thực hiện. |
+| AC154 | Audit Log phải có thể được sử dụng để phục vụ tra soát khi xảy ra sự cố. |
+
+---
+
+## 13.5. Payment Gateway
+
+### UC32 – Xử lý giao dịch thanh toán điện tử
+
+| Mã AC | Tiêu chí chấp nhận |
+|---|---|
+| AC155 | Khi khách hàng chọn thanh toán điện tử, hệ thống phải khởi tạo giao dịch với Payment Gateway. |
+| AC156 | Thông tin nhạy cảm của thẻ/tài khoản thanh toán không được lưu trực tiếp trong CAB System. |
+| AC157 | Khi Payment Gateway trả về thành công, hệ thống phải cập nhật giao dịch thành "hoàn tất". |
+| AC158 | Khi Payment Gateway trả về thất bại, hệ thống phải cập nhật trạng thái phù hợp và thông báo cho khách hàng. |
+| AC159 | Khi kết nối Payment Gateway bị timeout, hệ thống phải kiểm tra lại trạng thái giao dịch trước khi kết luận thất bại. |
+| AC160 | Hệ thống phải tránh ghi nhận thanh toán hai lần cho cùng một giao dịch. |
+| AC161 | Lỗi của Payment Gateway không được làm cho chức năng đặt xe hoặc các module không liên quan ngừng hoạt động. |
+
+---
+
+## 13.6. Acceptance Criteria cho yêu cầu phi chức năng
+
+Ngoài các AC của từng Use Case, hệ thống còn phải đáp ứng các tiêu chí nghiệm thu chung.
+
+| Mã AC | Tiêu chí chấp nhận |
+|---|---|
+| AC162 | Khách hàng và tài xế phải được xác thực trước khi sử dụng chức năng yêu cầu tài khoản. |
+| AC163 | Các API/chức năng quản trị phải kiểm tra quyền trước khi thực hiện thao tác. |
+| AC164 | Dữ liệu cá nhân, phương tiện, vị trí và giao dịch phải được bảo vệ khỏi truy cập trái phép. |
+| AC165 | Hệ thống CAB không được lưu trực tiếp thông tin thẻ/tài khoản thanh toán nhạy cảm. |
+| AC166 | Lỗi của module thanh toán không được làm toàn bộ hệ thống đặt xe ngừng hoạt động. |
+| AC167 | Lỗi của module thông báo không được làm toàn bộ hệ thống đặt xe ngừng hoạt động. |
+| AC168 | Các thành phần chính phải có khả năng mở rộng độc lập khi tải tăng. |
+| AC169 | Việc triển khai/cập nhật một chức năng phải hạn chế ảnh hưởng đến các chức năng đang hoạt động. |
+| AC170 | Kiến trúc phải cho phép bổ sung loại dịch vụ mới mà không phải xây dựng lại toàn bộ ứng dụng. |
+| AC171 | Kiến trúc phải cho phép bổ sung phương thức hoặc nhà cung cấp thanh toán mới trong tương lai. |
+| AC172 | Kiến trúc phải cho phép bổ sung kênh hoặc nhà cung cấp thông báo mới trong tương lai. |
+| AC173 | Các thao tác quản trị quan trọng phải được lưu vết để phục vụ kiểm tra và tra soát sự cố. |
+
+---
+
+## 13.7. Các Acceptance Criteria chưa thể chốt
+
+Một số tiêu chí chưa thể xác định giá trị cụ thể do khách hàng chưa cung cấp đầy đủ quy tắc nghiệp vụ.
+
+| Nội dung cần xác nhận | Ảnh hưởng đến AC |
+|---|---|
+| Thời gian tài xế được phép phản hồi chuyến | AC81, AC82, AC86, AC134 |
+| Bán kính tìm tài xế | AC130–AC132 |
+| Tiêu chí và trọng số ưu tiên tài xế | AC131–AC132 |
+| Thời gian/số lần tìm tài xế tối đa | AC136 |
+| Công thức tính cước chính thức | AC140 |
+| Chính sách hủy chuyến và phí hủy | AC36–AC40 |
+| Số lần được thử lại thanh toán | AC52, AC158 |
+| Quy trình khi khách hàng không có mặt | AC115–AC118 |
+| Cách xử lý khi tài xế/khách hàng mất kết nối | AC35, AC93 |
+| Thời gian lưu trữ dữ liệu và Audit Log | AC149–AC154, AC173 |
+
+> Các AC trên chỉ được xem là **chốt chính thức** sau khi những giá trị còn thiếu được BA xác nhận với khách hàng.
