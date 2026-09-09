@@ -621,3 +621,113 @@ Một số yêu cầu chưa đủ thông tin để xác định chi tiết và c
 - Quy tắc xử lý khi khách hàng hoặc tài xế mất kết nối.
 - Chính sách hủy chuyến.
 - Quy tắc xử lý và thử lại khi thanh toán thất bại.
+
+# Bước 8: Xác định Business Rules và Exception
+
+Business Rules xác định các quy tắc nghiệp vụ mà CAB System phải tuân theo.  
+Exception xác định các tình huống ngoại lệ có thể xảy ra và cách hệ thống xử lý.
+
+## 8.1. Business Rules
+
+| Mã | Business Rule | Diễn giải |
+|---|---|---|
+| BRU01 | Tài xế phải ở trạng thái sẵn sàng | Chỉ tài xế đang ở trạng thái sẵn sàng nhận chuyến mới được đưa vào danh sách tìm kiếm và phân công. |
+| BRU02 | Tài xế phải có loại xe phù hợp | Tài xế được đề xuất phải có phương tiện phù hợp với loại xe khách hàng lựa chọn. |
+| BRU03 | Ưu tiên tài xế phù hợp và gần khách hàng | Hệ thống ưu tiên các tài xế phù hợp và có vị trí gần điểm đón của khách hàng. |
+| BRU04 | Tài xế phải phản hồi trong thời gian quy định | Tài xế chỉ được chấp nhận chuyến trong khoảng thời gian phản hồi do doanh nghiệp quy định. |
+| BRU05 | Tự động tìm tài xế khác | Nếu tài xế từ chối hoặc không phản hồi đúng thời hạn, hệ thống phải tiếp tục tìm tài xế khác mà khách hàng không cần tạo lại yêu cầu. |
+| BRU06 | Một chuyến chỉ được phân công cho một tài xế | Khi một tài xế đã chấp nhận và được xác nhận nhận chuyến, hệ thống không được tiếp tục phân công chuyến đó cho tài xế khác. |
+| BRU07 | Chuyến đi phải theo đúng thứ tự trạng thái | Trạng thái chuyến được cập nhật theo quá trình: tài xế nhận chuyến → đến điểm đón → đón khách → đang di chuyển → hoàn thành. |
+| BRU08 | Chỉ tính cước khi chuyến hoàn thành | Hệ thống thực hiện tính số tiền phải trả sau khi chuyến đi được xác nhận hoàn thành. |
+| BRU09 | Hỗ trợ hai hình thức thanh toán | Khách hàng có thể thanh toán bằng tiền mặt hoặc thanh toán điện tử. |
+| BRU10 | Không lưu thông tin thanh toán nhạy cảm | Thông tin nhạy cảm của thẻ hoặc tài khoản thanh toán không được lưu trực tiếp trong CAB System. |
+| BRU11 | Chỉ đánh giá sau khi hoàn thành chuyến | Khách hàng chỉ được đánh giá tài xế đối với chuyến đi đã hoàn thành. |
+| BRU12 | Người dùng phải được xác thực | Khách hàng và tài xế phải được xác thực trước khi sử dụng các chức năng yêu cầu tài khoản. |
+| BRU13 | Chức năng quản trị phải được phân quyền | Nhân viên chỉ được thực hiện các chức năng quản trị phù hợp với quyền được cấp. |
+| BRU14 | Các thao tác quan trọng phải được lưu vết | Hệ thống phải ghi nhận các thao tác quan trọng để phục vụ kiểm tra và xử lý sự cố. |
+
+---
+
+## 8.2. Exception và cách xử lý
+
+| Mã | Exception | Cách xử lý |
+|---|---|---|
+| EX01 | Không tìm thấy tài xế phù hợp | Hệ thống tiếp tục tìm kiếm theo quy tắc đã xác định. Nếu vẫn không tìm được tài xế, hệ thống kết thúc quá trình tìm kiếm và thông báo rõ ràng cho khách hàng. |
+| EX02 | Tài xế từ chối chuyến | Hệ thống loại tài xế đó khỏi lần phân công hiện tại và tiếp tục tìm tài xế phù hợp khác. |
+| EX03 | Tài xế không phản hồi đúng thời hạn | Yêu cầu gửi cho tài xế hết hiệu lực và hệ thống tự động chuyển sang tìm tài xế khác. |
+| EX04 | Tài xế phản hồi sau khi yêu cầu đã hết hạn | Hệ thống không cho phép tài xế nhận yêu cầu đã hết hiệu lực và chuyến tiếp tục được xử lý với tài xế khác. |
+| EX05 | Không còn tài xế để tiếp tục tìm | Hệ thống dừng quá trình tìm tài xế và thông báo cho khách hàng rằng hiện không tìm được tài xế phù hợp. |
+| EX06 | Thanh toán điện tử thất bại | Hệ thống thông báo kết quả thất bại và cho phép xử lý lại theo chính sách của doanh nghiệp. |
+| EX07 | Nhà cung cấp thanh toán gặp lỗi | Hệ thống ghi nhận giao dịch chưa thành công, thông báo cho khách hàng và không để lỗi thanh toán làm dừng toàn bộ hệ thống đặt xe. |
+| EX08 | Gửi thông báo thất bại | Hệ thống ghi nhận lỗi thông báo nhưng không làm gián đoạn quá trình xử lý chuyến đi. |
+| EX09 | Khách hàng hoặc tài xế mất kết nối | Hệ thống xử lý theo chính sách mất kết nối của doanh nghiệp và đồng bộ lại trạng thái khi kết nối được khôi phục. |
+| EX10 | Khách hàng hoặc tài xế hủy chuyến | Hệ thống xử lý việc hủy và cập nhật trạng thái chuyến theo chính sách hủy chuyến của doanh nghiệp. |
+| EX11 | Người dùng chưa xác thực | Hệ thống từ chối chức năng yêu cầu tài khoản và yêu cầu người dùng xác thực. |
+| EX12 | Nhân viên không có quyền thực hiện thao tác | Hệ thống từ chối thao tác quản trị và không thực hiện thay đổi dữ liệu. |
+
+---
+
+## 8.3. Luồng ngoại lệ quan trọng – Tìm tài xế
+
+```mermaid
+flowchart TD
+    A[Khách hàng tạo yêu cầu chuyến] --> B[Hệ thống tìm tài xế phù hợp]
+    B --> C{Tìm thấy tài xế?}
+
+    C -->|Không| D{Còn khả năng tiếp tục tìm?}
+    D -->|Có| B
+    D -->|Không| E[Thông báo không tìm được tài xế]
+
+    C -->|Có| F[Gửi yêu cầu cho tài xế]
+    F --> G{Tài xế phản hồi đúng hạn?}
+
+    G -->|Không| H[Yêu cầu nhận chuyến hết hiệu lực]
+    H --> B
+
+    G -->|Có| I{Tài xế chấp nhận?}
+    I -->|Không| B
+    I -->|Có| J[Phân công tài xế]
+
+    J --> K[Thông báo cho khách hàng]
+```
+
+---
+
+## 8.4. Các Business Rules cần xác nhận với khách hàng
+
+Một số Business Rules chưa thể xác định giá trị cụ thể vì khách hàng chưa cung cấp đầy đủ thông tin:
+
+| Mã | Nội dung cần xác nhận |
+|---|---|
+| Q01 | Bán kính tìm kiếm tài xế ban đầu là bao nhiêu? |
+| Q02 | Hệ thống có mở rộng bán kính khi không tìm được tài xế hay không? |
+| Q03 | Tài xế có bao nhiêu thời gian để chấp nhận hoặc từ chối chuyến? |
+| Q04 | Hệ thống tìm tài xế trong tổng thời gian tối đa bao lâu trước khi thông báo thất bại? |
+| Q05 | Tiêu chí và thứ tự ưu tiên tài xế cụ thể là gì? |
+| Q06 | Rating của tài xế có được sử dụng làm tiêu chí ưu tiên hay không? |
+| Q07 | Công thức tính cước cụ thể như thế nào? |
+| Q08 | Khách hàng và tài xế được phép hủy chuyến trong trường hợp nào? |
+| Q09 | Có áp dụng phí hoặc hình thức xử lý khi hủy chuyến hay không? |
+| Q10 | Thanh toán thất bại được phép thử lại bao nhiêu lần? |
+| Q11 | Xử lý chuyến đang thực hiện như thế nào khi khách hàng hoặc tài xế mất kết nối? |
+
+---
+
+## 8.5. Kết luận
+
+Business Rules và Exception giúp xác định rõ cách CAB System phải xử lý trong cả trường hợp bình thường và trường hợp xảy ra ngoại lệ.
+
+Các quy tắc và ngoại lệ quan trọng nhất của phiên bản MVB tập trung vào:
+
+- Điều kiện lựa chọn và phân công tài xế.
+- Thời hạn phản hồi yêu cầu chuyến.
+- Xử lý tài xế từ chối hoặc không phản hồi.
+- Xử lý khi không tìm được tài xế.
+- Thứ tự trạng thái chuyến đi.
+- Tính cước và thanh toán.
+- Xử lý thanh toán thất bại.
+- Xử lý lỗi thông báo.
+- Xác thực và phân quyền.
+- Xử lý hủy chuyến và mất kết nối.
+
+Các nội dung chưa được khách hàng xác định cụ thể phải được BA xác nhận trước khi chuyển thành yêu cầu chi tiết và Acceptance Criteria.
