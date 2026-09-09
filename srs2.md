@@ -1883,3 +1883,292 @@ Chuỗi truy vết yêu cầu của dự án:
 → Use Case  
 → Use Case Specification  
 → Acceptance Criteria**
+
+
+# Bước 14: Requirement Traceability Matrix (RTM)
+
+Requirement Traceability Matrix (RTM) là **ma trận truy xuất nguồn gốc yêu cầu**, giúp theo dõi một yêu cầu từ khi bắt đầu hình thành cho đến khi được thiết kế, xây dựng và kiểm thử.
+
+RTM giúp:
+
+- Biết Business Goal nào tạo ra Business Requirement nào.
+- Biết Business Requirement được phân rã thành Functional Requirement nào.
+- Biết Functional Requirement được thể hiện trong Use Case nào.
+- Biết yêu cầu được nghiệm thu bằng Acceptance Criteria nào.
+- Biết Acceptance Criteria được kiểm tra bằng Test Case nào.
+- Hạn chế bỏ sót yêu cầu trong quá trình phát triển và kiểm thử.
+
+---
+
+## 14.1. Quy ước
+
+- `BGxx`: Business Goal
+- `BRxx`: Business Requirement
+- `FRxx`: Functional Requirement
+- `UCxx`: Use Case
+- `ACxx`: Acceptance Criteria
+- `TCxx`: Test Case
+
+Chuỗi truy xuất:
+
+**BG → BR → FR → UC → AC → TC**
+
+---
+
+## 14.2. Requirement Traceability Matrix
+
+| BG | BR | FR | UC | AC | Test Case |
+|---|---|---|---|---|---|
+| BG07 | BR01 | FR01 – Đăng ký tài khoản | UC01 | AC01 – AC04 | TC01 |
+| BG07 | BR01 | FR02 – Đăng nhập | UC02 | AC05 – AC07 | TC02 |
+| BG07 | BR01 | FR03 – Cập nhật thông tin cá nhân | UC03 | AC08 – AC10 | TC03 |
+| BG07, BG06 | BR01, BR11 | FR04 – Xem lịch sử chuyến đi | UC07 | AC28 – AC30 | TC04 |
+| BG04, BG07 | BR02 | FR05 – Tạo tài khoản tài xế | UC15 | AC62 – AC65 | TC05 |
+| BG04, BG07 | BR02 | FR06 – Cập nhật hồ sơ tài xế | UC10 | AC41 – AC44 | TC06 |
+| BG04 | BR02 | FR07 – Cập nhật thông tin phương tiện | UC10, UC16 | AC41 – AC44, AC66 – AC68 | TC07 |
+| BG04 | BR02 | FR08 – Cập nhật trạng thái hoạt động | UC11 | AC45 – AC47 | TC08 |
+| BG01 | BR02, BR04 | FR09 – Cập nhật vị trí tài xế | UC05 | AC17 – AC18 | TC09 |
+| BG01 | BR03 | FR10 – Nhập điểm đón | UC04 | AC11 – AC14 | TC10 |
+| BG01 | BR03 | FR11 – Nhập điểm đến | UC04 | AC11 – AC14 | TC11 |
+| BG01 | BR03 | FR12 – Chọn loại xe | UC04 | AC11 – AC14 | TC12 |
+| BG01 | BR03 | FR13 – Gửi yêu cầu đặt chuyến | UC04 | AC11 – AC14 | TC13 |
+| BG01 | BR03 | FR14 – Xác nhận yêu cầu đặt chuyến | UC04 | AC12 – AC14 | TC14 |
+| BG01 | BR04 | FR15 – Xác định vị trí điểm đón | UC05 | AC17 | TC15 |
+| BG01 | BR04 | FR16 – Tìm tài xế gần điểm đón | UC05 | AC17 – AC18 | TC16 |
+| BG01 | BR04 | FR17 – Lọc tài xế sẵn sàng | UC05 | AC15 | TC17 |
+| BG01 | BR04 | FR18 – Lọc theo loại xe | UC05 | AC16 | TC18 |
+| BG01 | BR04 | FR19 – Ưu tiên tài xế phù hợp | UC05 | AC18 | TC19 |
+| BG01 | BR04 | FR20 – Gửi yêu cầu chuyến cho tài xế | UC05, UC12 | AC19, AC48 | TC20 |
+| BG01 | BR05 | FR21 – Chấp nhận chuyến | UC12 | AC49 – AC50 | TC21 |
+| BG01 | BR05 | FR22 – Từ chối chuyến | UC12 | AC49, AC51 | TC22 |
+| BG01 | BR05 | FR23 – Xử lý tài xế không phản hồi | UC12 | AC52 – AC53 | TC23 |
+| BG01 | BR05 | FR24 – Tìm tài xế khác | UC05, UC12 | AC21 – AC22, AC51 – AC53 | TC24 |
+| BG01 | BR04 | FR25 – Thông báo không tìm được tài xế | UC05 | AC23 | TC25 |
+| BG03 | BR07, BR10 | FR26 – Thông báo tài xế nhận chuyến | UC06, UC21 | AC25, AC89 | TC26 |
+| BG03 | BR07 | FR27 – Hiển thị thông tin tài xế | UC06 | AC25 | TC27 |
+| BG03 | BR07 | FR28 – Hiển thị thời gian dự kiến đến | UC06 | AC26 | TC28 |
+| BG03 | BR06 | FR29 – Cập nhật trạng thái đã đến | UC13 | AC54 – AC56, AC90 | TC29 |
+| BG03 | BR06 | FR30 – Cập nhật trạng thái đã đón khách | UC13 | AC54 – AC58 | TC30 |
+| BG03 | BR06 | FR31 – Cập nhật trạng thái đang di chuyển | UC13 | AC54 – AC58 | TC31 |
+| BG03 | BR06 | FR32 – Hoàn thành chuyến | UC13 | AC54 – AC58, AC91 | TC32 |
+| BG03 | BR07 | FR33 – Theo dõi trạng thái chuyến | UC06 | AC24 – AC27 | TC33 |
+| BG02 | BR08 | FR34 – Tính cước chuyến đi | UC08 | AC31 – AC32 | TC34 |
+| BG02 | BR08 | FR35 – Hiển thị số tiền | UC08 | AC32 | TC35 |
+| BG02 | BR09 | FR36 – Chọn phương thức thanh toán | UC08 | AC33 | TC36 |
+| BG02 | BR09 | FR37 – Ghi nhận thanh toán tiền mặt | UC08 | AC33, AC36 | TC37 |
+| BG02, BG07 | BR09 | FR38 – Thanh toán điện tử | UC08 | AC34 – AC35 | TC38 |
+| BG02 | BR09 | FR39 – Ghi nhận kết quả thanh toán | UC08 | AC36 | TC39 |
+| BG02 | BR09 | FR40 – Xử lý thanh toán thất bại | UC08 | AC37 | TC40 |
+| BG03 | BR10 | FR41 – Thông báo tiếp nhận đặt xe | UC21 | AC88 | TC41 |
+| BG03 | BR10 | FR42 – Thông báo tài xế nhận chuyến | UC21 | AC89 | TC42 |
+| BG03 | BR10 | FR43 – Thông báo tài xế đến | UC21 | AC90 | TC43 |
+| BG03 | BR10 | FR44 – Thông báo hoàn thành chuyến | UC21 | AC91 | TC44 |
+| BG03 | BR10 | FR45 – Thông báo kết quả thanh toán | UC21 | AC92, AC94 | TC45 |
+| BG03 | BR10 | FR46 – Thông báo chuyến mới cho tài xế | UC21 | AC93 – AC94 | TC46 |
+| BG06 | BR12 | FR47 – Gửi đánh giá tài xế | UC09 | AC38 – AC40 | TC47 |
+| BG06 | BR12 | FR48 – Lưu đánh giá | UC09 | AC39 – AC40 | TC48 |
+| BG04, BG07 | BR13 | FR49 – Quản lý khách hàng | UC14 | AC59 – AC61 | TC49 |
+| BG04, BG07 | BR13 | FR50 – Quản lý tài xế | UC15 | AC62 – AC65 | TC50 |
+| BG04 | BR13 | FR51 – Quản lý phương tiện | UC16 | AC66 – AC68 | TC51 |
+| BG04 | BR13 | FR52 – Quản lý chuyến đi | UC17 | AC69 – AC72 | TC52 |
+| BG04 | BR13 | FR53 – Theo dõi trạng thái tài xế | UC17 | AC69 – AC70 | TC53 |
+| BG04 | BR13 | FR54 – Hỗ trợ xử lý chuyến lỗi | UC17 | AC69 – AC72 | TC54 |
+| BG04, BG06 | BR11, BR13 | FR55 – Tra cứu lịch sử giao dịch | UC18 | AC73 – AC76 | TC55 |
+| BG04, BG07 | BR14 | FR56 – Kiểm soát quyền quản trị | UC19 | AC77 – AC81 | TC56 |
+| BG06 | BR15 | FR57 – Báo cáo số lượng chuyến | UC20 | AC82 – AC83, AC87 | TC57 |
+| BG06 | BR15 | FR58 – Báo cáo doanh thu | UC20 | AC82, AC84, AC87 | TC58 |
+| BG06 | BR15 | FR59 – Báo cáo tỷ lệ hoàn thành và hủy | UC20 | AC82, AC85, AC87 | TC59 |
+| BG06 | BR15 | FR60 – Báo cáo hiệu quả tài xế | UC20 | AC82, AC86 – AC87 | TC60 |
+
+---
+
+## 14.3. Test Case tương ứng
+
+### Nhóm Customer
+
+| Mã TC | Test Case |
+|---|---|
+| TC01 | Kiểm tra đăng ký tài khoản với thông tin hợp lệ, không hợp lệ và tài khoản đã tồn tại. |
+| TC02 | Kiểm tra đăng nhập đúng, sai thông tin và quyền truy cập sau đăng nhập. |
+| TC03 | Kiểm tra cập nhật thông tin cá nhân hợp lệ và không hợp lệ. |
+| TC04 | Kiểm tra khách hàng xem lịch sử và chi tiết chuyến đi của chính mình. |
+
+### Nhóm Driver
+
+| Mã TC | Test Case |
+|---|---|
+| TC05 | Kiểm tra Operation Staff tạo tài khoản tài xế. |
+| TC06 | Kiểm tra tài xế cập nhật hồ sơ. |
+| TC07 | Kiểm tra cập nhật thông tin phương tiện và liên kết đúng tài xế. |
+| TC08 | Kiểm tra tài xế chuyển trạng thái sẵn sàng/không sẵn sàng. |
+| TC09 | Kiểm tra hệ thống sử dụng vị trí tài xế để hỗ trợ tìm tài xế. |
+
+### Nhóm đặt chuyến
+
+| Mã TC | Test Case |
+|---|---|
+| TC10 | Kiểm tra nhập điểm đón. |
+| TC11 | Kiểm tra nhập điểm đến. |
+| TC12 | Kiểm tra lựa chọn loại xe. |
+| TC13 | Kiểm tra gửi yêu cầu đặt chuyến với đầy đủ và thiếu thông tin. |
+| TC14 | Kiểm tra hệ thống tạo và xác nhận yêu cầu chuyến thành công. |
+
+### Nhóm tìm và phân công tài xế
+
+| Mã TC | Test Case |
+|---|---|
+| TC15 | Kiểm tra hệ thống xác định đúng điểm đón để tìm tài xế. |
+| TC16 | Kiểm tra tìm tài xế phù hợp theo vị trí. |
+| TC17 | Kiểm tra tài xế không sẵn sàng không được đưa vào danh sách phân công. |
+| TC18 | Kiểm tra tài xế có loại xe không phù hợp bị loại khỏi danh sách. |
+| TC19 | Kiểm tra hệ thống ưu tiên tài xế phù hợp và gần khách hàng. |
+| TC20 | Kiểm tra gửi yêu cầu nhận chuyến cho tài xế. |
+| TC21 | Kiểm tra tài xế chấp nhận yêu cầu chuyến còn hiệu lực. |
+| TC22 | Kiểm tra tài xế từ chối chuyến và hệ thống tiếp tục tìm người khác. |
+| TC23 | Kiểm tra tài xế không phản hồi trong thời gian quy định. |
+| TC24 | Kiểm tra tự động chuyển sang tài xế khác mà khách hàng không cần đặt lại. |
+| TC25 | Kiểm tra thông báo khi không tìm được tài xế phù hợp. |
+
+### Nhóm theo dõi và thực hiện chuyến
+
+| Mã TC | Test Case |
+|---|---|
+| TC26 | Kiểm tra khách hàng nhận thông tin khi tài xế nhận chuyến. |
+| TC27 | Kiểm tra hiển thị đúng thông tin tài xế. |
+| TC28 | Kiểm tra hiển thị ETA của tài xế. |
+| TC29 | Kiểm tra cập nhật trạng thái tài xế đã đến điểm đón. |
+| TC30 | Kiểm tra cập nhật trạng thái đã đón khách. |
+| TC31 | Kiểm tra cập nhật trạng thái đang di chuyển. |
+| TC32 | Kiểm tra hoàn thành chuyến và lưu trạng thái hoàn thành. |
+| TC33 | Kiểm tra khách hàng theo dõi được trạng thái mới nhất của chuyến. |
+
+### Nhóm tính cước và thanh toán
+
+| Mã TC | Test Case |
+|---|---|
+| TC34 | Kiểm tra hệ thống tính cước sau khi chuyến hoàn thành. |
+| TC35 | Kiểm tra hiển thị số tiền phải thanh toán. |
+| TC36 | Kiểm tra lựa chọn tiền mặt hoặc thanh toán điện tử. |
+| TC37 | Kiểm tra ghi nhận thanh toán tiền mặt. |
+| TC38 | Kiểm tra thanh toán điện tử thông qua Payment Provider. |
+| TC39 | Kiểm tra lưu kết quả thanh toán. |
+| TC40 | Kiểm tra xử lý khi thanh toán điện tử thất bại. |
+
+### Nhóm thông báo
+
+| Mã TC | Test Case |
+|---|---|
+| TC41 | Kiểm tra thông báo khi hệ thống tiếp nhận đặt chuyến. |
+| TC42 | Kiểm tra thông báo khi tài xế nhận chuyến. |
+| TC43 | Kiểm tra thông báo khi tài xế đến điểm đón. |
+| TC44 | Kiểm tra thông báo khi chuyến hoàn thành. |
+| TC45 | Kiểm tra thông báo kết quả thanh toán. |
+| TC46 | Kiểm tra tài xế nhận thông báo chuyến mới và xử lý khi gửi thông báo lỗi. |
+
+### Nhóm đánh giá
+
+| Mã TC | Test Case |
+|---|---|
+| TC47 | Kiểm tra chỉ cho phép khách hàng đánh giá sau khi chuyến hoàn thành. |
+| TC48 | Kiểm tra đánh giá được lưu đúng chuyến và đúng tài xế. |
+
+### Nhóm vận hành
+
+| Mã TC | Test Case |
+|---|---|
+| TC49 | Kiểm tra quản lý và tìm kiếm thông tin khách hàng. |
+| TC50 | Kiểm tra quản lý thông tin tài xế. |
+| TC51 | Kiểm tra quản lý thông tin phương tiện. |
+| TC52 | Kiểm tra Operation Staff theo dõi chuyến đi. |
+| TC53 | Kiểm tra Operation Staff xem trạng thái tài xế. |
+| TC54 | Kiểm tra xử lý chuyến gặp sự cố theo quyền được cấp. |
+| TC55 | Kiểm tra tìm kiếm và xem chi tiết lịch sử giao dịch. |
+| TC56 | Kiểm tra phân quyền, từ chối truy cập trái quyền và lưu Audit Log. |
+
+### Nhóm báo cáo
+
+| Mã TC | Test Case |
+|---|---|
+| TC57 | Kiểm tra báo cáo số lượng chuyến. |
+| TC58 | Kiểm tra báo cáo doanh thu. |
+| TC59 | Kiểm tra báo cáo tỷ lệ hoàn thành và tỷ lệ hủy. |
+| TC60 | Kiểm tra báo cáo hiệu quả hoạt động của tài xế. |
+
+---
+
+## 14.4. Ví dụ cách truy xuất một yêu cầu
+
+Ví dụ yêu cầu **tự động tìm tài xế**:
+
+`BG01 – Tự động tìm và phân công tài xế`
+
+↓
+
+`BR04 – Tìm và phân công tài xế`
+
+↓
+
+`FR17 – Lọc tài xế sẵn sàng`
+
+↓
+
+`UC05 – Tìm và phân công tài xế`
+
+↓
+
+`AC15 – Chỉ tài xế đang sẵn sàng mới được xét`
+
+↓
+
+`TC17 – Kiểm tra tài xế không sẵn sàng không được đưa vào danh sách phân công`
+
+Như vậy khi `TC17` thất bại, BA có thể truy ngược và xác định rằng chức năng đang không đáp ứng `AC15`, từ đó ảnh hưởng đến `FR17`, `BR04` và cuối cùng là `BG01`.
+
+---
+
+## 14.5. Truy xuất các yêu cầu Non-Functional
+
+Hai Business Goal chủ yếu liên quan đến Non-Functional Requirement không nên ép thành Functional Requirement.
+
+### BG05 – Mở rộng khả năng phục vụ
+
+Được truy xuất chủ yếu tới:
+
+- `NFR01 – Performance`
+- `NFR02 – Scalability`
+- `NFR03 – Availability`
+- `NFR04 – Reliability`
+
+Các yêu cầu này cần được kiểm thử bằng Performance Test, Load Test và Reliability Test khi các giá trị định lượng được khách hàng xác nhận.
+
+### BG08 – Hỗ trợ phát triển hệ thống trong tương lai
+
+Được truy xuất chủ yếu tới:
+
+- `NFR10 – Maintainability`
+- `NFR11 – Extensibility`
+
+Các NFR này đảm bảo hệ thống có thể bổ sung loại dịch vụ, phương thức thanh toán và kênh thông báo mới với mức ảnh hưởng hạn chế.
+
+---
+
+## 14.6. Kết luận
+
+RTM của CAB System tạo ra chuỗi truy xuất:
+
+**Business Goal  
+→ Business Requirement  
+→ Functional Requirement  
+→ Use Case  
+→ Acceptance Criteria  
+→ Test Case**
+
+Thông qua RTM, BA có thể kiểm tra:
+
+- Có Business Goal nào chưa được triển khai thành yêu cầu hay không.
+- Có Business Requirement nào chưa có Functional Requirement hay không.
+- Có Functional Requirement nào chưa xuất hiện trong Use Case hay không.
+- Có Use Case nào chưa có Acceptance Criteria hay không.
+- Có Acceptance Criteria nào chưa được kiểm thử bằng Test Case hay không.
+
+Nhờ đó, toàn bộ yêu cầu của CAB System có thể được theo dõi từ **nhu cầu ban đầu của khách hàng cho đến khi kiểm thử và nghiệm thu hệ thống**.
