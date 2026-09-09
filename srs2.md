@@ -169,3 +169,47 @@ Business Goal được xác định dựa trên các vấn đề nghiệp vụ c
 ### BG08 – Hỗ trợ phát triển hệ thống trong tương lai
 - **Mục tiêu:** Giảm ảnh hưởng khi doanh nghiệp bổ sung hoặc thay đổi chức năng.
 - **Kết quả mong muốn:** Có thể bổ sung loại dịch vụ, phương thức thanh toán và kênh thông báo mới mà không phải xây dựng lại toàn bộ hệ thống.
+
+# Bước 4: Xác định phạm vi yêu cầu
+
+## 4.1. In Scope – Phạm vi cần thực hiện
+
+Dưới góc độ MVB, CAB System cần tập trung vào các module cơ bản để hỗ trợ đầy đủ quy trình đặt xe.
+
+| Module | Phạm vi chính |
+|---|---|
+| **Quản lý khách hàng** | Đăng ký, đăng nhập, cập nhật thông tin cá nhân, xem lịch sử chuyến đi. |
+| **Quản lý tài xế** | Quản lý hồ sơ tài xế, trạng thái hoạt động, thông tin phương tiện. |
+| **Quản lý đặt xe** | Nhập điểm đón, điểm đến, chọn loại xe và tạo yêu cầu đặt xe. |
+| **Tìm và phân công tài xế** | Tự động tìm tài xế phù hợp, xử lý trường hợp tài xế từ chối hoặc không phản hồi. |
+| **Quản lý chuyến đi** | Theo dõi và cập nhật trạng thái chuyến đi từ lúc nhận chuyến đến khi hoàn thành. |
+| **Tính cước và thanh toán** | Tính số tiền chuyến đi, hỗ trợ thanh toán tiền mặt và thanh toán điện tử. |
+| **Thông báo** | Thông báo các trạng thái quan trọng của chuyến đi cho khách hàng và tài xế. |
+| **Đánh giá tài xế** | Cho phép khách hàng đánh giá tài xế sau khi chuyến đi hoàn thành. |
+| **Quản lý vận hành** | Quản lý khách hàng, tài xế, phương tiện, chuyến đi và hỗ trợ xử lý sự cố cơ bản. |
+| **Báo cáo cơ bản** | Thống kê số lượng chuyến, doanh thu, tỷ lệ hoàn thành và tỷ lệ hủy chuyến. |
+
+---
+
+## 4.2. Out of Scope – Ngoài phạm vi MVB
+
+Trong phiên bản MVB, chưa thực hiện các chức năng sau:
+
+- Nhiều loại dịch vụ xe nâng cao ngoài các loại xe cơ bản.
+- Chương trình khuyến mãi, voucher và loyalty.
+- Ví điện tử riêng của CAB System.
+- Nhiều nhà cung cấp thanh toán cùng lúc.
+- Nhiều kênh thông báo nâng cao.
+- Thuật toán AI/ML để dự đoán nhu cầu hoặc tối ưu phân công tài xế.
+- Hệ thống định giá động theo thời gian thực.
+- Báo cáo và phân tích nâng cao.
+- Hệ thống quản lý khiếu nại, chăm sóc khách hàng chuyên sâu.
+- Các chức năng mở rộng chưa cần thiết cho quy trình đặt xe cơ bản.
+
+---
+
+## 4.3. Phạm vi MVB cốt lõi
+
+MVB tập trung vào quy trình chính:
+
+**Khách hàng đặt xe → Hệ thống tìm tài xế → Tài xế nhận chuyến → Thực hiện chuyến → Hoàn thành → Tính cước → Thanh toán → Đánh giá**
