@@ -1013,3 +1013,78 @@ Ngoài ra có:
 - OperationStaff để phục vụ quản lý và vận hành hệ thống.
 
 Các thực thể nâng cao như Promotion, Voucher, Loyalty, Wallet hoặc Dynamic Pricing chưa cần đưa vào Data Model của phiên bản MVB.
+
+# Bước 10: Xác định Non-Functional Requirement
+
+Non-Functional Requirement (NFR) mô tả các yêu cầu về chất lượng và các ràng buộc mà CAB System cần đáp ứng.
+
+Trong phiên bản MVB, NFR tập trung vào những yêu cầu cần thiết và có căn cứ từ yêu cầu khách hàng, không đặt ra các tiêu chuẩn kỹ thuật quá cao hoặc chưa được xác nhận.
+
+## 10.1. Danh sách Non-Functional Requirement
+
+| Mã NFR | Nhóm | Yêu cầu |
+|---|---|---|
+| **NFR01** | Performance | Hệ thống phải duy trì khả năng xử lý các chức năng chính như đặt chuyến, tìm tài xế và cập nhật trạng thái khi nhu cầu sử dụng tăng cao. |
+| **NFR02** | Scalability | Hệ thống phải có khả năng mở rộng khi số lượng khách hàng, tài xế và yêu cầu đặt chuyến tăng. |
+| **NFR03** | Availability | Lỗi tại chức năng thanh toán hoặc thông báo không được làm toàn bộ chức năng đặt xe ngừng hoạt động. |
+| **NFR04** | Reliability | Các trạng thái quan trọng của chuyến đi và giao dịch phải được ghi nhận nhất quán, hạn chế mất hoặc sai lệch dữ liệu khi xảy ra lỗi. |
+| **NFR05** | Security | Khách hàng và tài xế phải được xác thực trước khi sử dụng các chức năng yêu cầu tài khoản. |
+| **NFR06** | Authorization | Các chức năng quản trị phải được kiểm soát quyền truy cập; nhân viên không được thực hiện thao tác ngoài quyền được cấp. |
+| **NFR07** | Data Protection | Thông tin cá nhân, phương tiện, vị trí và dữ liệu giao dịch phải được bảo vệ khỏi truy cập trái phép. |
+| **NFR08** | Payment Security | CAB System không được lưu trực tiếp thông tin nhạy cảm của thẻ hoặc tài khoản thanh toán điện tử. |
+| **NFR09** | Auditability | Các thao tác quan trọng của hệ thống và quản trị phải được lưu vết để phục vụ kiểm tra và xử lý sự cố. |
+| **NFR10** | Maintainability | Các chức năng mới phải có thể được triển khai với mức ảnh hưởng hạn chế đến các chức năng đang hoạt động. |
+| **NFR11** | Extensibility | Hệ thống phải hỗ trợ khả năng bổ sung loại dịch vụ, phương thức thanh toán và kênh thông báo mới trong tương lai. |
+| **NFR12** | Usability | Các chức năng chính như đặt xe, nhận chuyến, theo dõi chuyến và thanh toán phải có luồng sử dụng rõ ràng, dễ hiểu đối với người dùng. |
+
+---
+
+## 10.2. Mức độ ưu tiên NFR cho MVB
+
+| Mức độ | NFR |
+|---|---|
+| **Must Have** | Security, Authorization, Data Protection, Payment Security, Reliability |
+| **Should Have** | Performance, Availability, Auditability |
+| **Could Have / Chuẩn bị cho tương lai** | Scalability, Maintainability, Extensibility, Usability nâng cao |
+
+---
+
+## 10.3. Các NFR cần xác nhận thêm với khách hàng
+
+Một số NFR đã được khách hàng đề cập nhưng chưa có tiêu chí đo lường cụ thể:
+
+- Số lượng người dùng đồng thời hệ thống cần hỗ trợ.
+- Số lượng yêu cầu đặt chuyến hệ thống cần xử lý trong thời điểm cao điểm.
+- Thời gian phản hồi chấp nhận được đối với các chức năng chính.
+- Mức độ sẵn sàng (Availability) mong muốn của hệ thống.
+- Thời gian hệ thống có thể chấp nhận gián đoạn khi xảy ra sự cố.
+- Thời gian lưu trữ dữ liệu chuyến đi, vị trí, giao dịch và Audit Log.
+- Yêu cầu cụ thể về sao lưu và phục hồi dữ liệu.
+
+Các giá trị này cần được BA xác nhận với khách hàng trước khi chuyển thành tiêu chí đo lường cụ thể.
+
+---
+
+## 10.4. Những ràng buộc chưa nên tự đặt cho MVB
+
+Ở giai đoạn MVB, không tự đặt các yêu cầu kỹ thuật khi khách hàng chưa xác nhận, ví dụ:
+
+- Thời gian phản hồi phải dưới `1 ms`.
+- Hệ thống phải hỗ trợ hàng triệu request mỗi giây.
+- Availability phải đạt `99.999%`.
+- Bắt buộc sử dụng kiến trúc Microservices.
+- Bắt buộc sử dụng một ngôn ngữ hoặc framework cụ thể.
+- Bắt buộc triển khai trên một Cloud Provider cụ thể.
+- Bắt buộc sử dụng một công nghệ Database cụ thể.
+
+Đây là các quyết định hoặc tiêu chí kỹ thuật cần được xác định dựa trên nhu cầu thực tế, kiến trúc hệ thống và sự thống nhất với các bên liên quan.
+
+---
+
+## 10.5. Kết luận
+
+Các NFR quan trọng của CAB System MVB tập trung vào:
+
+**Performance → Reliability → Availability → Security → Data Protection → Auditability → Scalability → Maintainability → Extensibility**
+
+Ở giai đoạn MVB, mục tiêu là xây dựng một hệ thống **đủ ổn định, an toàn và có khả năng phát triển**, thay vì đặt ra các tiêu chuẩn kỹ thuật quá cao chưa có căn cứ từ yêu cầu khách hàng.
