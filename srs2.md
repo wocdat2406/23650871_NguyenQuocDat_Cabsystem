@@ -474,3 +474,150 @@ Các Business Process chính của CAB System gồm:
 - **BP05:** Quản lý và theo dõi vận hành.
 
 Các quy trình trên bao phủ luồng nghiệp vụ cốt lõi của phiên bản MVB từ khi khách hàng tạo yêu cầu đặt xe đến khi chuyến đi được hoàn thành, thanh toán và đánh giá.
+
+# Bước 7: Xác định Functional Requirement
+
+Functional Requirement (FR) mô tả các chức năng cụ thể mà CAB System phải thực hiện để đáp ứng các Business Requirement và Business Process đã xác định.
+
+## 7.1. Quản lý khách hàng
+
+| Mã FR | Tên Functional Requirement | Diễn giải |
+|---|---|---|
+| FR01 | Đăng ký tài khoản | Hệ thống cho phép khách hàng đăng ký tài khoản. |
+| FR02 | Đăng nhập | Hệ thống cho phép khách hàng đăng nhập để sử dụng các chức năng yêu cầu tài khoản. |
+| FR03 | Cập nhật thông tin cá nhân | Hệ thống cho phép khách hàng cập nhật thông tin cá nhân. |
+| FR04 | Xem lịch sử chuyến đi | Hệ thống cho phép khách hàng xem các chuyến đi đã thực hiện. |
+
+---
+
+## 7.2. Quản lý tài xế
+
+| Mã FR | Tên Functional Requirement | Diễn giải |
+|---|---|---|
+| FR05 | Tạo tài khoản tài xế | Hệ thống cho phép tài xế đăng ký hoặc nhân viên vận hành tạo tài khoản tài xế. |
+| FR06 | Cập nhật hồ sơ tài xế | Hệ thống cho phép tài xế cập nhật thông tin hồ sơ. |
+| FR07 | Cập nhật thông tin phương tiện | Hệ thống cho phép cập nhật thông tin phương tiện của tài xế. |
+| FR08 | Cập nhật trạng thái hoạt động | Hệ thống cho phép tài xế chuyển sang trạng thái sẵn sàng hoặc không sẵn sàng nhận chuyến. |
+| FR09 | Cập nhật vị trí tài xế | Hệ thống ghi nhận vị trí tài xế để hỗ trợ quá trình tìm tài xế phù hợp. |
+
+---
+
+## 7.3. Đặt chuyến
+
+| Mã FR | Tên Functional Requirement | Diễn giải |
+|---|---|---|
+| FR10 | Nhập điểm đón | Hệ thống cho phép khách hàng nhập điểm đón. |
+| FR11 | Nhập điểm đến | Hệ thống cho phép khách hàng nhập điểm đến. |
+| FR12 | Chọn loại xe | Hệ thống cho phép khách hàng lựa chọn loại xe phù hợp. |
+| FR13 | Gửi yêu cầu đặt chuyến | Hệ thống cho phép khách hàng gửi yêu cầu đặt chuyến sau khi cung cấp đầy đủ thông tin cần thiết. |
+| FR14 | Xác nhận yêu cầu đặt chuyến | Hệ thống tiếp nhận yêu cầu và thông báo cho khách hàng rằng yêu cầu đã được tiếp nhận. |
+
+---
+
+## 7.4. Tìm và phân công tài xế
+
+| Mã FR | Tên Functional Requirement | Diễn giải |
+|---|---|---|
+| FR15 | Xác định vị trí điểm đón | Hệ thống sử dụng vị trí điểm đón của khách hàng làm cơ sở tìm tài xế. |
+| FR16 | Tìm tài xế gần điểm đón | Hệ thống tìm các tài xế trong khu vực phù hợp với điểm đón của khách hàng. |
+| FR17 | Lọc tài xế sẵn sàng | Hệ thống chỉ lựa chọn các tài xế đang ở trạng thái sẵn sàng nhận chuyến. |
+| FR18 | Lọc theo loại xe | Hệ thống lựa chọn tài xế có phương tiện phù hợp với loại xe khách hàng đã chọn. |
+| FR19 | Ưu tiên tài xế phù hợp | Hệ thống ưu tiên tài xế phù hợp và gần khách hàng dựa trên các tiêu chí vận hành đã được xác định. |
+| FR20 | Gửi yêu cầu chuyến cho tài xế | Hệ thống gửi thông báo yêu cầu nhận chuyến đến tài xế được lựa chọn. |
+| FR21 | Chấp nhận chuyến | Hệ thống cho phép tài xế chấp nhận yêu cầu chuyến. |
+| FR22 | Từ chối chuyến | Hệ thống cho phép tài xế từ chối yêu cầu chuyến. |
+| FR23 | Xử lý tài xế không phản hồi | Khi tài xế không phản hồi trong thời gian quy định, hệ thống tiếp tục tìm tài xế khác. |
+| FR24 | Tìm tài xế khác | Khi tài xế từ chối hoặc không phản hồi, hệ thống tự động tìm tài xế khác mà không yêu cầu khách hàng đặt lại chuyến. |
+| FR25 | Thông báo không tìm được tài xế | Nếu không tìm được tài xế phù hợp, hệ thống thông báo rõ ràng cho khách hàng. |
+
+---
+
+## 7.5. Thực hiện và theo dõi chuyến đi
+
+| Mã FR | Tên Functional Requirement | Diễn giải |
+|---|---|---|
+| FR26 | Thông báo tài xế nhận chuyến | Hệ thống thông báo cho khách hàng khi có tài xế chấp nhận chuyến. |
+| FR27 | Hiển thị thông tin tài xế | Hệ thống cho phép khách hàng xem thông tin tài xế đã nhận chuyến. |
+| FR28 | Hiển thị thời gian dự kiến đến | Hệ thống hiển thị thời gian dự kiến tài xế đến điểm đón. |
+| FR29 | Cập nhật trạng thái đã đến | Tài xế có thể cập nhật trạng thái đã đến điểm đón. |
+| FR30 | Cập nhật trạng thái đã đón khách | Tài xế có thể cập nhật trạng thái đã đón khách. |
+| FR31 | Cập nhật trạng thái đang di chuyển | Tài xế có thể cập nhật trạng thái đang thực hiện chuyến. |
+| FR32 | Hoàn thành chuyến | Tài xế có thể cập nhật trạng thái hoàn thành khi chuyến đi kết thúc. |
+| FR33 | Theo dõi trạng thái chuyến | Hệ thống cho phép khách hàng theo dõi trạng thái hiện tại của chuyến đi. |
+
+---
+
+## 7.6. Tính cước và thanh toán
+
+| Mã FR | Tên Functional Requirement | Diễn giải |
+|---|---|---|
+| FR34 | Tính cước chuyến đi | Sau khi chuyến hoàn thành, hệ thống tính số tiền khách hàng phải trả dựa trên loại dịch vụ và thông tin chuyến đi. |
+| FR35 | Hiển thị số tiền | Hệ thống hiển thị số tiền khách hàng phải thanh toán. |
+| FR36 | Chọn phương thức thanh toán | Hệ thống cho phép khách hàng lựa chọn tiền mặt hoặc thanh toán điện tử. |
+| FR37 | Ghi nhận thanh toán tiền mặt | Hệ thống ghi nhận chuyến đi sử dụng phương thức thanh toán bằng tiền mặt. |
+| FR38 | Thanh toán điện tử | Hệ thống gửi yêu cầu thanh toán đến nhà cung cấp thanh toán bên ngoài. |
+| FR39 | Ghi nhận kết quả thanh toán | Hệ thống ghi nhận kết quả của giao dịch thanh toán. |
+| FR40 | Xử lý thanh toán thất bại | Khi thanh toán điện tử thất bại, hệ thống thông báo cho khách hàng và cho phép xử lý lại theo chính sách doanh nghiệp. |
+
+---
+
+## 7.7. Thông báo
+
+| Mã FR | Tên Functional Requirement | Diễn giải |
+|---|---|---|
+| FR41 | Thông báo tiếp nhận đặt xe | Hệ thống thông báo cho khách hàng khi yêu cầu đặt xe được tiếp nhận. |
+| FR42 | Thông báo tài xế nhận chuyến | Hệ thống thông báo cho khách hàng khi có tài xế nhận chuyến. |
+| FR43 | Thông báo tài xế đến | Hệ thống thông báo cho khách hàng khi tài xế đến điểm đón. |
+| FR44 | Thông báo hoàn thành chuyến | Hệ thống thông báo khi chuyến đi hoàn thành. |
+| FR45 | Thông báo kết quả thanh toán | Hệ thống thông báo kết quả thanh toán cho khách hàng. |
+| FR46 | Thông báo chuyến mới cho tài xế | Hệ thống thông báo cho tài xế khi có yêu cầu chuyến mới phù hợp. |
+
+---
+
+## 7.8. Đánh giá tài xế
+
+| Mã FR | Tên Functional Requirement | Diễn giải |
+|---|---|---|
+| FR47 | Gửi đánh giá tài xế | Hệ thống cho phép khách hàng đánh giá tài xế sau khi chuyến đi hoàn thành. |
+| FR48 | Lưu đánh giá | Hệ thống lưu đánh giá của khách hàng gắn với chuyến đi và tài xế tương ứng. |
+
+---
+
+## 7.9. Quản lý vận hành
+
+| Mã FR | Tên Functional Requirement | Diễn giải |
+|---|---|---|
+| FR49 | Quản lý khách hàng | Nhân viên vận hành có thể xem và quản lý thông tin khách hàng. |
+| FR50 | Quản lý tài xế | Nhân viên vận hành có thể xem và quản lý thông tin tài xế. |
+| FR51 | Quản lý phương tiện | Nhân viên vận hành có thể xem và quản lý thông tin phương tiện. |
+| FR52 | Quản lý chuyến đi | Nhân viên vận hành có thể tra cứu và theo dõi các chuyến đi. |
+| FR53 | Theo dõi trạng thái tài xế | Nhân viên vận hành có thể kiểm tra trạng thái hoạt động của tài xế. |
+| FR54 | Hỗ trợ xử lý chuyến lỗi | Nhân viên vận hành có thể kiểm tra và hỗ trợ xử lý các chuyến gặp sự cố. |
+| FR55 | Tra cứu lịch sử giao dịch | Nhân viên vận hành có thể tra cứu lịch sử giao dịch của hệ thống. |
+| FR56 | Kiểm soát quyền quản trị | Hệ thống giới hạn các thao tác quản trị nhạy cảm dựa trên quyền của nhân viên. |
+
+---
+
+## 7.10. Báo cáo
+
+| Mã FR | Tên Functional Requirement | Diễn giải |
+|---|---|---|
+| FR57 | Báo cáo số lượng chuyến | Hệ thống thống kê số lượng chuyến đi. |
+| FR58 | Báo cáo doanh thu | Hệ thống thống kê doanh thu từ các chuyến đi. |
+| FR59 | Báo cáo tỷ lệ hoàn thành và hủy | Hệ thống thống kê tỷ lệ chuyến hoàn thành và tỷ lệ chuyến bị hủy. |
+| FR60 | Báo cáo hiệu quả tài xế | Hệ thống cung cấp thông tin phục vụ đánh giá hiệu quả hoạt động của tài xế. |
+
+---
+
+## 7.11. Các Functional Requirement cần xác nhận thêm
+
+Một số yêu cầu chưa đủ thông tin để xác định chi tiết và cần BA xác nhận lại với khách hàng:
+
+- Bán kính tìm kiếm tài xế là bao nhiêu.
+- Thời gian tài xế được phép phản hồi yêu cầu chuyến.
+- Các tiêu chí và thứ tự ưu tiên khi lựa chọn tài xế.
+- Có sử dụng đánh giá (rating) của tài xế làm tiêu chí tìm tài xế hay không.
+- Công thức tính cước cụ thể.
+- Quy tắc xử lý khi khách hàng hoặc tài xế mất kết nối.
+- Chính sách hủy chuyến.
+- Quy tắc xử lý và thử lại khi thanh toán thất bại.
