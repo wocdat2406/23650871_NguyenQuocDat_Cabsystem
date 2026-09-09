@@ -731,3 +731,285 @@ Các quy tắc và ngoại lệ quan trọng nhất của phiên bản MVB tập
 - Xử lý hủy chuyến và mất kết nối.
 
 Các nội dung chưa được khách hàng xác định cụ thể phải được BA xác nhận trước khi chuyển thành yêu cầu chi tiết và Acceptance Criteria.
+
+# Bước 9: Data Modelling
+
+Data Modelling giúp xác định các thực thể dữ liệu chính, thuộc tính quan trọng và mối quan hệ giữa các thực thể trong CAB System.
+
+## 9.1. Xác định các thực thể chính
+
+| Thực thể | Mô tả |
+|---|---|
+| **Customer** | Lưu thông tin khách hàng sử dụng hệ thống đặt xe. |
+| **Driver** | Lưu thông tin tài xế tham gia nhận và thực hiện chuyến. |
+| **Vehicle** | Lưu thông tin phương tiện của tài xế. |
+| **Ride** | Lưu thông tin yêu cầu đặt chuyến và quá trình thực hiện chuyến đi. |
+| **RideAssignment** | Lưu thông tin việc hệ thống gửi yêu cầu chuyến cho tài xế và kết quả phản hồi. |
+| **Payment** | Lưu thông tin thanh toán của chuyến đi. |
+| **Rating** | Lưu đánh giá của khách hàng dành cho tài xế sau chuyến đi. |
+| **Notification** | Lưu các thông báo được gửi đến khách hàng hoặc tài xế. |
+| **OperationStaff** | Lưu thông tin nhân viên vận hành hệ thống. |
+
+---
+
+## 9.2. Thuộc tính chính của các thực thể
+
+### Customer
+
+- customer_id
+- full_name
+- phone
+- email
+- password
+- status
+
+### Driver
+
+- driver_id
+- full_name
+- phone
+- email
+- password
+- activity_status
+- current_location
+
+### Vehicle
+
+- vehicle_id
+- driver_id
+- vehicle_type
+- license_plate
+- model
+- status
+
+### Ride
+
+- ride_id
+- customer_id
+- driver_id
+- pickup_location
+- destination
+- vehicle_type
+- ride_status
+- created_at
+- completed_at
+- fare_amount
+
+### RideAssignment
+
+- assignment_id
+- ride_id
+- driver_id
+- sent_at
+- response_at
+- response_status
+
+### Payment
+
+- payment_id
+- ride_id
+- payment_method
+- amount
+- payment_status
+- transaction_time
+
+### Rating
+
+- rating_id
+- ride_id
+- customer_id
+- driver_id
+- score
+- comment
+- created_at
+
+### Notification
+
+- notification_id
+- receiver_id
+- receiver_type
+- ride_id
+- message
+- notification_status
+- created_at
+
+### OperationStaff
+
+- staff_id
+- full_name
+- username
+- password
+- role
+- status
+
+---
+
+## 9.3. Mối quan hệ giữa các thực thể
+
+- Một **Customer** có thể tạo nhiều **Ride**.
+- Một **Driver** có thể thực hiện nhiều **Ride**.
+- Một **Driver** có thể có một hoặc nhiều **Vehicle**.
+- Một **Ride** có thể được gửi đến nhiều **Driver** trong quá trình tìm tài xế, được lưu thông qua **RideAssignment**.
+- Một **Ride** có thể có một **Payment**.
+- Một **Ride** có thể có một **Rating** sau khi hoàn thành.
+- Một **Ride** có thể phát sinh nhiều **Notification**.
+- **OperationStaff** quản lý và theo dõi các dữ liệu liên quan đến khách hàng, tài xế, phương tiện và chuyến đi.
+
+---
+
+## 9.4. ERD của CAB System
+
+```mermaid
+erDiagram
+
+    CUSTOMER ||--o{ RIDE : creates
+    DRIVER ||--o{ RIDE : performs
+    DRIVER ||--o{ VEHICLE : owns
+    RIDE ||--o{ RIDE_ASSIGNMENT : has
+    DRIVER ||--o{ RIDE_ASSIGNMENT : receives
+    RIDE ||--o| PAYMENT : has
+    RIDE ||--o| RATING : receives
+    CUSTOMER ||--o{ RATING : gives
+    DRIVER ||--o{ RATING : receives
+    RIDE ||--o{ NOTIFICATION : generates
+
+    CUSTOMER {
+        int customer_id PK
+        string full_name
+        string phone
+        string email
+        string password
+        string status
+    }
+
+    DRIVER {
+        int driver_id PK
+        string full_name
+        string phone
+        string email
+        string password
+        string activity_status
+        string current_location
+    }
+
+    VEHICLE {
+        int vehicle_id PK
+        int driver_id FK
+        string vehicle_type
+        string license_plate
+        string model
+        string status
+    }
+
+    RIDE {
+        int ride_id PK
+        int customer_id FK
+        int driver_id FK
+        string pickup_location
+        string destination
+        string vehicle_type
+        string ride_status
+        datetime created_at
+        datetime completed_at
+        decimal fare_amount
+    }
+
+    RIDE_ASSIGNMENT {
+        int assignment_id PK
+        int ride_id FK
+        int driver_id FK
+        datetime sent_at
+        datetime response_at
+        string response_status
+    }
+
+    PAYMENT {
+        int payment_id PK
+        int ride_id FK
+        string payment_method
+        decimal amount
+        string payment_status
+        datetime transaction_time
+    }
+
+    RATING {
+        int rating_id PK
+        int ride_id FK
+        int customer_id FK
+        int driver_id FK
+        int score
+        string comment
+        datetime created_at
+    }
+
+    NOTIFICATION {
+        int notification_id PK
+        int ride_id FK
+        int receiver_id
+        string receiver_type
+        string message
+        string notification_status
+        datetime created_at
+    }
+
+    OPERATION_STAFF {
+        int staff_id PK
+        string full_name
+        string username
+        string password
+        string role
+        string status
+    }
+```
+
+---
+
+## 9.5. Giải thích một số thực thể quan trọng
+
+### Ride
+
+`Ride` là thực thể trung tâm của hệ thống, lưu toàn bộ thông tin của một chuyến đi từ khi khách hàng tạo yêu cầu cho đến khi chuyến hoàn thành.
+
+### RideAssignment
+
+`RideAssignment` rất quan trọng vì một chuyến có thể được hệ thống gửi đến nhiều tài xế khác nhau.
+
+Ví dụ:
+
+- Tài xế A nhận yêu cầu nhưng từ chối.
+- Hệ thống chuyển sang tài xế B.
+- Tài xế B không phản hồi.
+- Hệ thống tiếp tục gửi cho tài xế C.
+- Tài xế C chấp nhận chuyến.
+
+Các lần gửi và phản hồi này được lưu trong `RideAssignment`.
+
+### Payment
+
+`Payment` dùng để lưu kết quả thanh toán của chuyến đi, bao gồm:
+
+- Tiền mặt.
+- Thanh toán điện tử.
+- Thành công.
+- Thất bại.
+
+Hệ thống không lưu trực tiếp thông tin nhạy cảm của thẻ hoặc tài khoản thanh toán.
+
+### Rating
+
+`Rating` chỉ được tạo sau khi chuyến đi hoàn thành và dùng để lưu đánh giá của khách hàng dành cho tài xế.
+
+---
+
+## 9.6. Phạm vi Data Model của MVB
+
+Data Model của phiên bản MVB tập trung vào các dữ liệu cần thiết cho quy trình:
+
+**Customer → Ride → RideAssignment → Driver → Vehicle → Payment → Rating**
+
+Ngoài ra có:
+
+- Notification để hỗ trợ gửi thông báo.
+- OperationStaff để phục vụ quản lý và vận hành hệ thống.
+
+Các thực thể nâng cao như Promotion, Voucher, Loyalty, Wallet hoặc Dynamic Pricing chưa cần đưa vào Data Model của phiên bản MVB.
