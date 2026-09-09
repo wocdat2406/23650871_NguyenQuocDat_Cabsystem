@@ -213,3 +213,73 @@ Trong phiên bản MVB, chưa thực hiện các chức năng sau:
 MVB tập trung vào quy trình chính:
 
 **Khách hàng đặt xe → Hệ thống tìm tài xế → Tài xế nhận chuyến → Thực hiện chuyến → Hoàn thành → Tính cước → Thanh toán → Đánh giá**
+
+# Bước 5: Xác định Business Requirement
+
+Sau khi xác định phạm vi hệ thống và xác nhận lại với khách hàng, các yêu cầu trong phạm vi MVB được chuyển thành **Business Requirement (BR)**.
+
+## 5.1. Danh sách Business Requirement
+
+| Mã BR | Tên Business Requirement | Diễn giải |
+|---|---|---|
+| **BR01** | Quản lý khách hàng | Hệ thống cho phép khách hàng đăng ký tài khoản, đăng nhập, cập nhật thông tin cá nhân và xem lịch sử chuyến đi. |
+| **BR02** | Quản lý tài xế | Hệ thống cho phép tạo tài khoản tài xế, cập nhật hồ sơ, thông tin phương tiện và trạng thái hoạt động. |
+| **BR03** | Đặt chuyến | Khách hàng có thể nhập điểm đón, điểm đến, lựa chọn loại xe và gửi yêu cầu đặt chuyến. |
+| **BR04** | Tìm và phân công tài xế | Hệ thống tự động tìm tài xế phù hợp dựa trên vị trí, trạng thái sẵn sàng và các tiêu chí vận hành để phân công chuyến. |
+| **BR05** | Xử lý yêu cầu nhận chuyến | Tài xế có thể chấp nhận hoặc từ chối chuyến. Nếu tài xế từ chối hoặc không phản hồi, hệ thống tiếp tục tìm tài xế khác mà khách hàng không cần tạo lại yêu cầu. |
+| **BR06** | Quản lý chuyến đi | Hệ thống quản lý quá trình thực hiện chuyến và cho phép tài xế cập nhật các trạng thái: đã đến điểm đón, đã đón khách, đang di chuyển và hoàn thành chuyến. |
+| **BR07** | Theo dõi chuyến đi | Khách hàng có thể theo dõi trạng thái tìm tài xế, thông tin tài xế nhận chuyến, thời gian dự kiến tài xế đến và trạng thái hiện tại của chuyến. |
+| **BR08** | Tính cước | Sau khi chuyến hoàn thành, hệ thống xác định số tiền khách hàng phải trả dựa trên loại dịch vụ và thông tin chuyến đi. |
+| **BR09** | Thanh toán | Hệ thống hỗ trợ thanh toán bằng tiền mặt và thanh toán điện tử, đồng thời ghi nhận kết quả thanh toán của chuyến đi. |
+| **BR10** | Thông báo | Hệ thống gửi thông báo cho khách hàng và tài xế về các sự kiện quan trọng liên quan đến yêu cầu đặt xe, chuyến đi và thanh toán. |
+| **BR11** | Quản lý lịch sử chuyến đi | Hệ thống lưu trữ và cho phép tra cứu lịch sử chuyến đi và các thông tin giao dịch liên quan. |
+| **BR12** | Đánh giá tài xế | Khách hàng có thể đánh giá tài xế sau khi chuyến đi hoàn thành. |
+| **BR13** | Quản lý vận hành | Nhân viên vận hành có thể quản lý khách hàng, tài xế, phương tiện, theo dõi chuyến đi và hỗ trợ xử lý các chuyến gặp sự cố. |
+| **BR14** | Phân quyền quản trị | Hệ thống kiểm soát quyền truy cập đối với các chức năng quản trị để hạn chế nhân viên thực hiện các thao tác nhạy cảm không được phép. |
+| **BR15** | Báo cáo hoạt động | Hệ thống cung cấp báo cáo về số lượng chuyến, doanh thu, tỷ lệ hoàn thành, tỷ lệ hủy và hiệu quả hoạt động của tài xế. |
+
+---
+
+## 5.2. Mối quan hệ giữa Business Goal và Business Requirement
+
+| Business Goal | Business Requirement liên quan |
+|---|---|
+| **BG01 – Tự động tìm và phân công tài xế** | BR03, BR04, BR05 |
+| **BG02 – Hỗ trợ thanh toán** | BR08, BR09 |
+| **BG03 – Theo dõi trạng thái chuyến đi** | BR06, BR07, BR10 |
+| **BG04 – Nâng cao hiệu quả vận hành** | BR02, BR11, BR13, BR14 |
+| **BG05 – Mở rộng khả năng phục vụ** | Các BR của hệ thống cần được thiết kế để hỗ trợ khả năng mở rộng |
+| **BG06 – Hỗ trợ quản lý và ra quyết định** | BR11, BR15 |
+| **BG07 – Đảm bảo an toàn thông tin** | BR01, BR02, BR14 |
+| **BG08 – Hỗ trợ phát triển hệ thống trong tương lai** | Các BR cần được thiết kế theo hướng dễ mở rộng và thay đổi |
+
+---
+
+## 5.3. Quy trình nghiệp vụ chính
+
+Các Business Requirement trên hỗ trợ quy trình nghiệp vụ cốt lõi của CAB System:
+
+```mermaid
+flowchart LR
+    A[Khách hàng đặt chuyến] --> B[Hệ thống tìm tài xế]
+    B --> C[Tài xế nhận chuyến]
+    C --> D[Thực hiện chuyến]
+    D --> E[Hoàn thành chuyến]
+    E --> F[Tính cước]
+    F --> G[Thanh toán]
+    G --> H[Đánh giá tài xế]
+```
+
+---
+
+## 5.4. Kết luận
+
+Các Business Requirement trên xác định những yêu cầu nghiệp vụ chính mà **CAB System phiên bản MVB** cần đáp ứng.
+
+Các yêu cầu tập trung vào quy trình chính:
+
+**Quản lý khách hàng → Đặt chuyến → Tìm và phân công tài xế → Thực hiện chuyến → Theo dõi chuyến → Tính cước → Thanh toán → Đánh giá**
+
+Ngoài ra, hệ thống hỗ trợ các hoạt động cần thiết như **quản lý tài xế, thông báo, quản lý vận hành, phân quyền và báo cáo**.
+
+Các yêu cầu chi tiết hơn về chức năng, quy tắc nghiệp vụ, yêu cầu phi chức năng và các trường hợp ngoại lệ sẽ được phân tích ở các bước tiếp theo.
