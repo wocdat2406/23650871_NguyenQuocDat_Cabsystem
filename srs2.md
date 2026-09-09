@@ -283,3 +283,194 @@ Các yêu cầu tập trung vào quy trình chính:
 Ngoài ra, hệ thống hỗ trợ các hoạt động cần thiết như **quản lý tài xế, thông báo, quản lý vận hành, phân quyền và báo cáo**.
 
 Các yêu cầu chi tiết hơn về chức năng, quy tắc nghiệp vụ, yêu cầu phi chức năng và các trường hợp ngoại lệ sẽ được phân tích ở các bước tiếp theo.
+
+# Bước 6: Xây dựng Business Process
+
+Business Process mô tả luồng nghiệp vụ chính của CAB System từ khi khách hàng đặt chuyến cho đến khi chuyến đi hoàn thành.
+
+## 6.1. BP01 – Quy trình đặt chuyến và tìm tài xế
+
+### Mô tả
+
+1. Khách hàng nhập điểm đón.
+2. Khách hàng nhập điểm đến.
+3. Khách hàng chọn loại xe.
+4. Khách hàng gửi yêu cầu đặt chuyến.
+5. Hệ thống tiếp nhận và xác nhận yêu cầu.
+6. Hệ thống tìm tài xế phù hợp dựa trên vị trí và trạng thái sẵn sàng.
+7. Hệ thống gửi yêu cầu chuyến cho tài xế.
+8. Tài xế chấp nhận hoặc từ chối chuyến.
+9. Nếu tài xế chấp nhận, hệ thống phân công tài xế và thông báo cho khách hàng.
+10. Nếu tài xế từ chối hoặc không phản hồi, hệ thống tiếp tục tìm và gửi yêu cầu cho tài xế khác.
+11. Nếu không tìm được tài xế phù hợp, hệ thống thông báo cho khách hàng.
+
+```mermaid
+flowchart TD
+    A[Khách hàng nhập điểm đón] --> B[Nhập điểm đến]
+    B --> C[Chọn loại xe]
+    C --> D[Gửi yêu cầu đặt chuyến]
+    D --> E[Hệ thống xác nhận yêu cầu]
+    E --> F[Hệ thống tìm tài xế phù hợp]
+    F --> G{Tìm thấy tài xế?}
+
+    G -->|Không| H[Thông báo không tìm được tài xế]
+    G -->|Có| I[Gửi yêu cầu cho tài xế]
+
+    I --> J{Tài xế chấp nhận?}
+    J -->|Có| K[Phân công tài xế]
+    K --> L[Thông báo cho khách hàng]
+
+    J -->|Không / Không phản hồi| M[Tiếp tục tìm tài xế khác]
+    M --> F
+```
+
+---
+
+## 6.2. BP02 – Quy trình thực hiện chuyến đi
+
+### Mô tả
+
+1. Tài xế chấp nhận chuyến.
+2. Hệ thống thông báo thông tin tài xế cho khách hàng.
+3. Tài xế di chuyển đến điểm đón.
+4. Tài xế cập nhật trạng thái đã đến điểm đón.
+5. Hệ thống thông báo cho khách hàng.
+6. Tài xế đón khách và cập nhật trạng thái đã đón khách.
+7. Tài xế bắt đầu thực hiện chuyến đi.
+8. Tài xế cập nhật trạng thái đang di chuyển.
+9. Tài xế đến điểm đến.
+10. Tài xế cập nhật trạng thái hoàn thành chuyến.
+11. Hệ thống ghi nhận chuyến đi đã hoàn thành.
+
+```mermaid
+flowchart TD
+    A[Tài xế chấp nhận chuyến] --> B[Thông báo cho khách hàng]
+    B --> C[Tài xế di chuyển đến điểm đón]
+    C --> D[Cập nhật: Đã đến điểm đón]
+    D --> E[Thông báo khách hàng]
+    E --> F[Đón khách]
+    F --> G[Cập nhật: Đã đón khách]
+    G --> H[Bắt đầu chuyến đi]
+    H --> I[Cập nhật: Đang di chuyển]
+    I --> J[Đến điểm đến]
+    J --> K[Cập nhật: Hoàn thành]
+    K --> L[Hệ thống ghi nhận chuyến hoàn thành]
+```
+
+---
+
+## 6.3. BP03 – Quy trình tính cước và thanh toán
+
+### Mô tả
+
+1. Chuyến đi được hoàn thành.
+2. Hệ thống tính số tiền khách hàng phải trả.
+3. Hệ thống hiển thị số tiền cho khách hàng.
+4. Khách hàng lựa chọn phương thức thanh toán.
+5. Nếu thanh toán bằng tiền mặt, hệ thống ghi nhận phương thức thanh toán.
+6. Nếu thanh toán điện tử, hệ thống gửi yêu cầu đến nhà cung cấp thanh toán.
+7. Nhà cung cấp thanh toán xử lý giao dịch.
+8. Nếu thanh toán thành công, hệ thống ghi nhận kết quả.
+9. Nếu thanh toán thất bại, hệ thống thông báo cho khách hàng và cho phép xử lý lại theo chính sách của doanh nghiệp.
+
+```mermaid
+flowchart TD
+    A[Chuyến đi hoàn thành] --> B[Hệ thống tính cước]
+    B --> C[Hiển thị số tiền]
+    C --> D{Phương thức thanh toán}
+
+    D -->|Tiền mặt| E[Ghi nhận thanh toán tiền mặt]
+    E --> J[Hoàn tất thanh toán]
+
+    D -->|Điện tử| F[Gửi yêu cầu thanh toán]
+    F --> G[Nhà cung cấp xử lý]
+    G --> H{Thanh toán thành công?}
+
+    H -->|Có| I[Ghi nhận thanh toán thành công]
+    I --> J
+
+    H -->|Không| K[Thông báo thanh toán thất bại]
+    K --> L[Cho phép xử lý lại]
+```
+
+---
+
+## 6.4. BP04 – Quy trình đánh giá sau chuyến đi
+
+### Mô tả
+
+1. Chuyến đi đã hoàn thành.
+2. Hệ thống cho phép khách hàng đánh giá tài xế.
+3. Khách hàng nhập đánh giá.
+4. Khách hàng gửi đánh giá.
+5. Hệ thống lưu đánh giá của chuyến đi.
+
+```mermaid
+flowchart TD
+    A[Chuyến đi hoàn thành] --> B[Cho phép đánh giá tài xế]
+    B --> C[Khách hàng nhập đánh giá]
+    C --> D[Gửi đánh giá]
+    D --> E[Hệ thống lưu đánh giá]
+```
+
+---
+
+## 6.5. BP05 – Quy trình quản lý và theo dõi vận hành
+
+### Mô tả
+
+1. Nhân viên vận hành đăng nhập hệ thống quản trị.
+2. Nhân viên xem danh sách các chuyến đi.
+3. Nhân viên theo dõi trạng thái chuyến và tài xế.
+4. Nếu chuyến hoạt động bình thường, hệ thống tiếp tục ghi nhận trạng thái.
+5. Nếu chuyến gặp sự cố, nhân viên kiểm tra thông tin.
+6. Nhân viên thực hiện xử lý theo quyền được cấp.
+7. Hệ thống lưu lại thao tác quan trọng.
+
+```mermaid
+flowchart TD
+    A[Nhân viên vận hành đăng nhập] --> B[Xem danh sách chuyến đi]
+    B --> C[Theo dõi trạng thái chuyến và tài xế]
+    C --> D{Có sự cố?}
+
+    D -->|Không| E[Tiếp tục theo dõi]
+    E --> C
+
+    D -->|Có| F[Kiểm tra thông tin sự cố]
+    F --> G[Xử lý theo quyền được cấp]
+    G --> H[Hệ thống lưu thao tác]
+```
+
+---
+
+## 6.6. Business Process tổng quát
+
+Quy trình nghiệp vụ chính của CAB System:
+
+```mermaid
+flowchart LR
+    A[Khách hàng đặt chuyến] --> B[Tìm tài xế]
+    B --> C{Tài xế nhận?}
+
+    C -->|Không| B
+    C -->|Có| D[Phân công tài xế]
+
+    D --> E[Đón khách]
+    E --> F[Thực hiện chuyến]
+    F --> G[Hoàn thành chuyến]
+    G --> H[Tính cước]
+    H --> I[Thanh toán]
+    I --> J[Đánh giá tài xế]
+```
+
+## 6.7. Kết luận
+
+Các Business Process chính của CAB System gồm:
+
+- **BP01:** Đặt chuyến và tìm tài xế.
+- **BP02:** Thực hiện chuyến đi.
+- **BP03:** Tính cước và thanh toán.
+- **BP04:** Đánh giá sau chuyến đi.
+- **BP05:** Quản lý và theo dõi vận hành.
+
+Các quy trình trên bao phủ luồng nghiệp vụ cốt lõi của phiên bản MVB từ khi khách hàng tạo yêu cầu đặt xe đến khi chuyến đi được hoàn thành, thanh toán và đánh giá.
