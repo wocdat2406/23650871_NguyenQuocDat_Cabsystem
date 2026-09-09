@@ -87,3 +87,49 @@ Các vấn đề này cần được BA xác nhận với stakeholder trước k
 **Business Context:** Công ty ABC cần xây dựng CAB System để quản lý toàn bộ quy trình đặt xe từ khi khách hàng tạo yêu cầu đến khi chuyến đi hoàn thành, thanh toán và đánh giá.
 
 **Business Problem:** Hệ thống hiện tại còn phụ thuộc vào phân công tài xế thủ công, khó theo dõi chuyến đi, quản lý thanh toán chưa tập trung, vận hành khó khăn và khả năng mở rộng còn hạn chế.
+
+# Bước 2: Xác định Stakeholders
+
+## 2.1. Danh sách Stakeholders
+
+Dựa trên Business Context và Business Problem, các stakeholder chính của CAB System được xác định như sau:
+
+| Stakeholder | Vai trò |
+|---|---|
+| **Khách hàng (Customer)** | Đặt xe, theo dõi chuyến đi, thanh toán, xem lịch sử chuyến và đánh giá tài xế. |
+| **Tài xế (Driver)** | Nhận hoặc từ chối chuyến, cập nhật vị trí, trạng thái hoạt động và thực hiện chuyến đi. |
+| **Nhân viên vận hành (Operation Staff)** | Quản lý khách hàng, tài xế, phương tiện, chuyến đi và hỗ trợ xử lý các trường hợp gặp sự cố. |
+| **Ban lãnh đạo (Management)** | Đưa ra yêu cầu, theo dõi báo cáo và đánh giá hiệu quả hoạt động của hệ thống. |
+| **Nhà cung cấp thanh toán (Payment Provider)** | Xử lý các giao dịch thanh toán điện tử của khách hàng. |
+| **Nhà cung cấp thông báo (Notification Provider)** | Hỗ trợ gửi thông báo đến khách hàng và tài xế qua các kênh thông báo. |
+
+---
+
+## 2.2. Stakeholder Matrix
+
+Stakeholder Matrix giúp xác định **mức độ ảnh hưởng (Power)** và **mức độ quan tâm (Interest)** của các stakeholder đối với CAB System.
+
+```mermaid
+quadrantChart
+    title Stakeholder Matrix - CAB System
+    x-axis Low Interest --> High Interest
+    y-axis Low Power --> High Power
+
+    quadrant-1 Manage Closely
+    quadrant-2 Keep Satisfied
+    quadrant-3 Monitor
+    quadrant-4 Keep Informed
+
+    Management: [0.90, 0.95]
+    Operation Staff: [0.85, 0.80]
+    Customer: [0.90, 0.65]
+    Driver: [0.85, 0.60]
+    Payment Provider: [0.55, 0.50]
+    Notification Provider: [0.40, 0.35]
+```
+
+### Phân nhóm Stakeholders
+
+- **Manage Closely:** Ban lãnh đạo, Nhân viên vận hành.
+- **Keep Informed:** Khách hàng, Tài xế.
+- **Monitor / Keep Satisfied:** Nhà cung cấp thanh toán và Nhà cung cấp thông báo tùy theo mức độ tích hợp và phụ thuộc của hệ thống.
